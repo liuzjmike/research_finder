@@ -2,4 +2,4 @@
  2. Zijie Liu (zl99): Wrote SQL queries to create tables, check constraints and load sample data into tables.
  3. Yanbo Fang (yf59): Created the E/R diagram, web interface and test-sample.
  4. Minh Tran (qmt): Created the E/R diagram and created test-sample queries.
- 5. Jiayi Tian: 
+ 5. Jiayi Tian (jt201): Data Research & Collection.
