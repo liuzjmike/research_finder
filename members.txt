@@ -1,0 +1,5 @@
+ 1. David Haotian Zheng (dhz): Wrote description of project, how to obtain data and assumptions as well as describing the web interface.
+ 2. Zijie Liu (zl99): Wrote SQL queries to create tables, check constraints and load sample data into tables.
+ 3. Yanbo Fang (yf59): Created the E/R diagram, web interface and test-sample.
+ 4. Minh Tran (qmt): Created the E/R diagram and created test-sample queries.
+ 5. Jiayi Tian: 
