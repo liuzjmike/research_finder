@@ -15,13 +15,13 @@ CREATE TABLE Professor(netid VARCHAR(10) NOT NULL PRIMARY KEY REFERENCES People(
 CREATE TYPE status AS ENUM ('Undergraduate', 'Master', 'PhD', 'Post-Doc');
 CREATE TABLE Student(netid VARCHAR(10) NOT NULL PRIMARY KEY REFERENCES People(netid),
                      status status,
-                     start_year INTEGER NOT NULL CHECK(year >= 1838));
+                     start_year INTEGER NOT NULL CHECK(start_year >= 1838));
 
 CREATE TABLE Member(netid VARCHAR(10) NOT NULL REFERENCES People(netid),
                     dept_id VARCHAR(10) NOT NULL REFERENCES Department(id),
-                    PRIMARY KEY(netid, dept_name));
+                    PRIMARY KEY(netid, dept_id));
 
-# CREATE TABLE Field(field VARCHAR(30) NOT NULL PRIMARY KEY);
+-- CREATE TABLE Field(field VARCHAR(30) NOT NULL PRIMARY KEY);
 
 CREATE TABLE Interest(netid VARCHAR(10) NOT NULL REFERENCES People(netid),
                       field VARCHAR(30) NOT NULL,
