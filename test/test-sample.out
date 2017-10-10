@@ -1,0 +1,76 @@
+--INSERT INTO PEOPLE VALUES('avm10', 'Ashwin', 'Machanavajjhala', 'ashwin@cs.duke.edu');
+--INSERT INTO PROFESSOR VALUES('avm10','Assistant Professor');
+--Professor got promoted
+UPDATE PROFESSOR
+SET title = 'Professor'
+WHERE netid='avm10';
+UPDATE 1
+--Professor adds an interest
+--INSERT INTO INTEREST VALUES('avm10', 'Machine Learning');
+--Professor removes an interest
+DELETE FROM INTEREST
+WHERE netid = 'avm10' AND field = 'Differential Privacy';
+DELETE 0
+--Browse all departments
+SELECT name FROM Department;
+               name                
+-----------------------------------
+ Computer Science
+ Electrical & Computer Engineering
+ Statistical Science
+(3 rows)
+
+--Browse all fields
+SELECT DISTINCT field FROM INTEREST;
+      field       
+------------------
+ Machine Learning
+(1 row)
+
+--Find the fields of interests for a specific person according to their netid
+SELECT field FROM INTEREST WHERE netid = 'avm10';
+      field       
+------------------
+ Machine Learning
+(1 row)
+
+--As a professor, find the netid of students from specific status and start_year who are interested in his fields of interests
+SELECT DISTINCT Student.netid FROM Student, Interest as I1, Interest as I2, Professor WHERE status = 'Undergraduate' AND start_year = 2015 AND student.netid = i1.netid AND i2.netid = 'avm10' AND i1.field = i2.field;
+ netid 
+-------
+ zl99
+(1 row)
+
+--As a student, find the netid of professors who have interests in ML
+SELECT DISTINCT Professor.netid FROM Professor, INTEREST WHERE field = 'Machine Learning' AND PROFESSOR.netid = INTEREST.netid;
+ netid 
+-------
+ avm10
+(1 row)
+
+--As a professor, find the netid of students who have interests in ML
+SELECT DISTINCT Student.netid FROM Student, INTEREST WHERE field = 'Machine Learning' AND Student.netid = INTEREST.netid;
+ netid 
+-------
+ zl99
+(1 row)
+
+--Find the name of professors in a certain department and their emails
+SELECT DISTINCT first_name, last_name, email FROM People, Professor, Member WHERE People.netid = Professor.netid AND Professor.netid = Member.netid AND Member.dept_id = 'COMPSCI';
+ first_name |    last_name    |       email        
+------------+-----------------+--------------------
+ Krishnendu | Chakrabarty     | krish@ee.duke.edu
+ Ashwin     | Machanavajjhala | ashwin@cs.duke.edu
+ Robert     | Duvall          | rcd@cs.duke.edu
+(3 rows)
+
+--Find the name of students in a specific department and their emails.
+SELECT DISTINCT first_name, last_name, email FROM People, Student, Member WHERE People.netid = Student.netid AND Student.netid = Member.netid AND Member.dept_id = 'COMPSCI';
+  first_name   | last_name |     email     
+---------------+-----------+---------------
+ Minh          | Tran      | qnt@duke.edu
+ David Haotian | Zheng     | dhz@duke.edu
+ Yanbo         | Fang      | yf59@duke.edu
+ Zijie         | Liu       | zl99@duke.edu
+(4 rows)
+
