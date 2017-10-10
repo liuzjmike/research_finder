@@ -1,2 +1,2 @@
 # Research Finder
-The sample database can be set up by calling /db-research/setup.sh
+The sample database called `research` can be set up by calling /db-research/setup.sh

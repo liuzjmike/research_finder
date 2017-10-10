@@ -1,0 +1,2 @@
+user.name=Mike Liu user.email=zl99@duke.edu push.default=simple core.repositoryformatversion=0 core.filemode=false core.bare=false core.logallrefupdates=true core.symlinks=false core.ignorecase=true 
+remote.origin.url=git@github.com:liuzjmike/research_finder.git remote.origin.fetch=+refs/heads/*:refs/remotes/origin/* branch.master.remote=origin branch.master.merge=refs/heads/master
