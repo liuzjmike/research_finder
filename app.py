@@ -13,11 +13,54 @@ def all_drinkers():
 
 @app.route('/signup')
 def signup():
-    return render_template('signup.html')
+    form = form.SignUpFormFactory.signup()
+    if form.validate_on_submit():
+        try:
+            form.errors.pop('database', None)
+
+            existing_user = models.People.doesUserExist(form.netid.data)
+            if existing_user == False:
+                return render_template('signup.html', form=form)
+
+            models.People.insert(form.netid.data, form.first_name.data, form.last_name.data, form.email.data, form.password.data, form.major.data)
+            # check if student or professor and store in the appropriate table
+
+            if form.member.data == 'student':
+                # TODO: figure out how to add resume
+                models.Student.insert(form.netid.data, form.status.data, form.start_year.data)
+            else:
+                models.Professor.insert(form.netid.data, form.title.data, form.opening.data, form.personal_web.data)
+
+            # insert interests
+            interests = [x.strip() for x in (form.interests.data).split(',')]
+            models.Interest.insert(form.netid.data, interests)
+
+            # TODO: redirect to profile page (not finished)
+            return redirect(url_for('drinker', name=form.name.data))
+        except BaseException as e:
+            form.errors['database'] = str(e)
+            return render_template('signup.html', form=form)
+    else:
+        return render_template('signup.html', form=form)
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    form = form.SignUpFormFactory.login()
+    if form.validate_on_submit():
+        try:
+            form.errors.pop('database', None)
+
+            existing_user = models.People.validateUser(form.netid.data, form.password.data)
+            if existing_user == False:
+                return render_template('login.html', form=form)
+
+            # TODO: redirect to profile page (not finished)
+            return redirect(url_for('drinker', name=form.name.data))
+        except BaseException as e:
+            form.errors['database'] = str(e)
+            return render_template('login.html', form=form)
+    else:
+        return render_template('login.html', form=form)
 
 @app.route('/search')
 def search():
