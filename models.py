@@ -1,5 +1,6 @@
 from app import db
 
+
 class People(db.Model):
     __tablename__ = 'people'
     netid = db.Column('netid', db.String(10), primary_key=True, nullable=False)
@@ -7,38 +8,34 @@ class People(db.Model):
     last_name = db.Column('last_name', db.String(20), nullable=False)
     email = db.Column('email', db.String(30))
     db.UniqueConstraint('first_name', 'last_name', 'email', name='name_email')
-    @staticmethod
-    def insert(netid, first_name, last_name, email):
+
+    @classmethod
+    def insert(cls, netid, first_name, last_name, email):
         try:
-            db.session.execute('INSERT INTO People (netid, first_name, last_name, email) VALUES (:netid, :first_name, :last_name, :email)')
+            person = cls(netid=netid, first_name=first_name,
+                         last_name=last_name, email=email)
+            db.session.add(person)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             raise e
-    @staticmethod
-    def doesUserExist(netid):
-        try:
-            result = db.engine.execute('SELECT * FROM People WHERE (netid= :netid)')
-            if len(result) > 0:
-                return True
-            return False
-        except Exception as e:
-            db.session.rollback()
-            raise e
-    def validateUser(netid, password):
-        try:
-            result = db.engine.execute('SELECT * FROM People WHERE (netid= :netid AND password= :password)')
-            if len(result) > 0:
-                return True
-            return False
-        except Exception as e:
-            db.session.rollback()
-            raise e
+
+    @classmethod
+    def has_user(cls, netid):
+        user = db.session.query(cls).filter(cls.netid == netid)
+        return db.session.query(user.exists()).scalar()
+
+    @classmethod
+    def authenticate(cls, netid, password):
+        user = db.session.query(cls).filter(cls.netid == netid and cls.password == password)
+        return db.session.query(user.exists()).scalar()
+
 
 class Department(db.Model):
     __tablename__ = 'department'
     id = db.Column('id', db.String(10), primary_key=True, nullable=False)
     name = db.Column('name', db.String(40), nullable=False, unique=True)
+
 
 class Faculty(db.Model):
     __tablename__ = 'faculty'
@@ -56,14 +53,17 @@ class Faculty(db.Model):
     opening = db.Column('opening', db.Integer, nullable=False)
     db.CheckConstraint('opening >= 0', name='opening')
 
-    @staticmethod
-    def insert(netid, title, opening, personal_web):
+    @classmethod
+    def insert(cls, netid, title, opening, website):
         try:
-            db.session.execute('INSERT INTO Faculty (netid, title, opening, personal_web) VALUES (:netid, :title, :opening, :personal_web)')
+            faculty = cls(netid=netid, title=title,
+                          opening=opening, website=website)
+            db.session.add(faculty)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             raise e
+
 
 class Student(db.Model):
     __tablename__ = 'student'
@@ -81,14 +81,17 @@ class Student(db.Model):
     start_year = db.Column('start_year', db.Integer, nullable=False)
     db.CheckConstraint('start_year >= 1838', name='start_year')
 
-    @staticmethod
-    def insert(netid, status, start_year):
+    @classmethod
+    def insert(cls, netid, status, start_year, resume):
         try:
-            db.session.execute('INSERT INTO Student (netid, status, start_year) VALUES (:netid, :status, :start_year)')
+            student = cls(netid=netid, status=status,
+                          start_year=start_year, resume=resume)
+            db.session.add(student)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             raise e
+
 
 class Member(db.Model):
     __tablename__ = 'member'
@@ -101,14 +104,15 @@ class Member(db.Model):
                         primary_key=True,
                         nullable=False)
 
-    @staticmethod
-    def insert(netid, dept_id):
+    @classmethod
+    def insert(cls, netid, dept_id):
         try:
-            db.session.execute('INSERT INTO Member (netid, dept_id) VALUES (:netid, :dept_id)')
+            db.session.add(cls(netid=netid, dept_id=dept_id))
             db.session.commit()
         except Exception as e:
             db.session.rollback()
             raise e
+
 
 class Interest(db.Model):
     __tablename__ = 'interest'
@@ -120,11 +124,10 @@ class Interest(db.Model):
                       primary_key=True,
                       nullable=False)
 
-    @staticmethod
-    def insert(netid, interests):
+    @classmethod
+    def insert(cls, netid, interests):
         try:
-            for interest in interests:
-                db.session.execute('INSERT INTO Interest (netid, interest) VALUES (:netid, :interest)')
+            db.session.add_all([cls(netid=netid, interest=interest) for interest in interests])
             db.session.commit()
         except Exception as e:
             db.session.rollback()

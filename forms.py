@@ -14,7 +14,7 @@ class SignUpFormFactory:
             major = StringField()
             interests = StringField()
             website = StringField()
-            member = RadioField('Professor or Student?', choices=[('professor','Professor'),('student','Student')])
+            member = RadioField('Professor or Student?', choices=[('professor', 'Professor'), ('student', 'Student')])
             title = StringField()
             status = StringField()
             start_year = StringField()
