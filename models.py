@@ -17,22 +17,22 @@ class People(db.Model):
             raise e
     def doesUserExist(netid):
         try:
-           result = db.engine.execute('SELECT FROM People WHERE (netid= :netid)')
-           if len(result > 0):
-               return True
-           return False
-       except Exception as e:
-           db.session.rollback()
-           raise e
+            result = db.engine.execute('SELECT * FROM People WHERE (netid= :netid)')
+            if len(result > 0):
+                return True
+            return False
+        except Exception as e:
+            db.session.rollback()
+            raise e
     def validateUser(netid, password):
-          try:
-             result = db.engine.execute('SELECT FROM People WHERE (netid= :netid AND password= :password)')
-             if len(result > 0):
-                 return True
-             return False
-         except Exception as e:
-             db.session.rollback()
-             raise e
+        try:
+            result = db.engine.execute('SELECT * FROM People WHERE (netid= :netid AND password= :password)')
+            if len(result > 0):
+                return True
+            return False
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
 class Department(db.Model):
     __tablename__ = 'department'

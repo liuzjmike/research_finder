@@ -13,7 +13,7 @@ def all_drinkers():
 
 @app.route('/signup')
 def signup():
-    form = form.SignUpFormFactory.signup()
+    form = forms.SignUpFormFactory.signup()
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
@@ -36,16 +36,16 @@ def signup():
             models.Interest.insert(form.netid.data, interests)
 
             # TODO: redirect to profile page (not finished)
-            return redirect(url_for('drinker', name=form.name.data))
+            return redirect(url_for('profile', name=form.name.data))
         except BaseException as e:
             form.errors['database'] = str(e)
-            return render_template('signup.html', form=form)
+            return render_template('signup', form=form)
     else:
-        return render_template('signup.html', form=form)
+        return render_template('signup', form=form)
 
 @app.route('/login')
 def login():
-    form = form.SignUpFormFactory.login()
+    form = forms.SignUpFormFactory.login()
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
@@ -58,13 +58,20 @@ def login():
             return redirect(url_for('drinker', name=form.name.data))
         except BaseException as e:
             form.errors['database'] = str(e)
-            return render_template('login.html', form=form)
+            return render_template('login', form=form)
     else:
-        return render_template('login.html', form=form)
+        return render_template('login', form=form)
 
 @app.route('/search')
 def search():
     return render_template('search.html')
+
+@app.route('/profile/<netid>')
+def profile(netid):
+    person_data = db.session.query(models.People)\
+        .filter(models.People.netid == netid).one()
+    return render_template('drinker.html', drinker=drinker)
+
 
 # @app.route('/drinker/<name>')
 # def drinker(name):
