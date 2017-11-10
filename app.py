@@ -12,7 +12,7 @@ db = SQLAlchemy(app, session_options={'autocommit': False})
 def all_drinkers():
     return redirect(url_for('login'))
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = forms.SignUpFormFactory.signup()
     if form.validate_on_submit():
@@ -51,11 +51,11 @@ def signup():
             return redirect(url_for('profile', name=form.name.data))
         except BaseException as e:
             form.errors['database'] = str(e)
-            return render_template('signup', form=form)
+            return render_template('signup.html', form=form)
     else:
-        return render_template('signup', form=form)
+        return render_template('signup.html', form=form)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = forms.SignUpFormFactory.login()
     if form.validate_on_submit():
@@ -70,9 +70,9 @@ def login():
             return redirect(url_for('drinker', name=form.name.data))
         except BaseException as e:
             form.errors['database'] = str(e)
-            return render_template('login', form=form)
+            return render_template('login.html', form=form)
     else:
-        return render_template('login', form=form)
+        return render_template('login.html', form=form)
 
 @app.route('/search')
 def search():
