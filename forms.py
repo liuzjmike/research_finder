@@ -20,7 +20,7 @@ class SignUpFormFactory:
             start_year = StringField()
             opening = StringField()
         return F()
-    def signin():
+    def login():
         class F(FlaskForm):
             email = StringField()
             password = StringField()
