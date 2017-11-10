@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+
 import models
 import forms
 
@@ -13,23 +14,34 @@ def all_drinkers():
 
 @app.route('/signup')
 def signup():
-    form = form.SignUpFormFactory.signup()
+    form = forms.SignUpFormFactory.signup()
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
 
             existing_user = models.People.doesUserExist(form.netid.data)
-            if existing_user == False:
+            if not existing_user:
                 return render_template('signup.html', form=form)
 
-            models.People.insert(form.netid.data, form.first_name.data, form.last_name.data, form.email.data, form.password.data, form.major.data)
+            models.People.insert(
+                form.netid.data,
+                form.first_name.data,
+                form.last_name.data,
+                form.email.data)
             # check if student or professor and store in the appropriate table
 
             if form.member.data == 'student':
                 # TODO: figure out how to add resume
-                models.Student.insert(form.netid.data, form.status.data, form.start_year.data)
+                models.Student.insert(
+                    form.netid.data,
+                    form.status.data,
+                    form.start_year.data)
             else:
-                models.Professor.insert(form.netid.data, form.title.data, form.opening.data, form.personal_web.data)
+                models.Faculty.insert(
+                    form.netid.data,
+                    form.title.data,
+                    form.opening.data,
+                    form.personal_web.data)
 
             # insert interests
             interests = [x.strip() for x in (form.interests.data).split(',')]
@@ -45,13 +57,13 @@ def signup():
 
 @app.route('/login')
 def login():
-    form = form.SignUpFormFactory.login()
+    form = forms.SignUpFormFactory.login()
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
 
             existing_user = models.People.validateUser(form.netid.data, form.password.data)
-            if existing_user == False:
+            if not existing_user:
                 return render_template('login.html', form=form)
 
             # TODO: redirect to profile page (not finished)
