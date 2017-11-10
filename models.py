@@ -19,7 +19,7 @@ class People(db.Model):
     def doesUserExist(netid):
         try:
             result = db.engine.execute('SELECT * FROM People WHERE (netid= :netid)')
-            if len(result > 0):
+            if len(result) > 0:
                 return True
             return False
         except Exception as e:
@@ -28,7 +28,7 @@ class People(db.Model):
     def validateUser(netid, password):
         try:
             result = db.engine.execute('SELECT * FROM People WHERE (netid= :netid AND password= :password)')
-            if len(result > 0):
+            if len(result) > 0:
                 return True
             return False
         except Exception as e:
