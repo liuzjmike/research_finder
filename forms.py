@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, IntegerField
+from wtforms import StringField, RadioField
 from wtforms.validators import DataRequired
 
 class SignUpFormFactory:
@@ -20,6 +20,7 @@ class SignUpFormFactory:
             start_year = StringField()
             opening = StringField()
         return F()
+    @staticmethod
     def login():
         class F(FlaskForm):
             email = StringField()

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' type='text/css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" type='text/css'>
+  <link rel="stylesheet" href="/static/css/form.css?version" type="text/css" media="screen"/>
+</head>
+
+<body>
+  <div class="form">
+      
+    <ul class="tab-group">
+      <li class="tab active"><a href="{{url_for('signup')}}">Sign Up</a></li>
+      <li class="tab"><a href="{{url_for('login')}}">Log In</a></li>
+    </ul>
+    
+    <div class="tab-content">
+      <div id="signup">   
+        <h1>Sign Up!</h1>
+        
+        <form action="{{url_for('signup')}}" method="post">
+        
+          <div class="top-row">
+            <div class="field-wrap">
+              <label>
+                First Name<span class="req">*</span>
+              </label>
+              <input type="text" required autocomplete="off" />
+            </div>
+        
+            <div class="field-wrap">
+              <label>
+                Last Name<span class="req">*</span>
+              </label>
+              <input type="text"required autocomplete="off"/>
+            </div>
+          </div>
+
+            <div class="field-wrap">
+            <label>
+              NetID<span class="req">*</span>
+            </label>
+            <input type="text"required autocomplete="off"/>
+          </div>
+              
+          <div class="field-wrap">
+            <label>
+              Email Address<span class="req">*</span>
+            </label>
+            <input type="email"required autocomplete="off"/>
+          </div>
+          
+          <div class="field-wrap">
+            <label>
+              Set A Password<span class="req">*</span>
+            </label>
+            <input type="password"required autocomplete="off"/>
+          </div>
+          
+          <div class="field-wrap">
+            <label>
+              Confirm Password<span class="req">*</span>
+            </label>
+            <input type="password"required autocomplete="off"/>
+          </div>
+              
+          <div class="field-wrap">
+            <label>
+              Department 1/Major 1<span class="req">*</span>
+            </label>
+            <input type="text"required autocomplete="off"/>
+          </div>
+              
+            <div class="field-wrap">
+            <label>
+              Department 2/Major 2
+            </label>
+            <input type="text"not required autocomplete="off"/>
+          </div>
+              
+            <div class="field-wrap">
+            <label>
+              Personal Website
+            </label>
+            <input type="url"not required autocomplete="off"/>
+          </div>
+              
+            <div class="field-wrap">
+              <label style="position:relative">
+                Upload Resume
+              </label>
+              <input type="file" single>
+          </div>
+              
+          <div class="field-wrap">
+              <select name="select">
+                  <option value="--" selected>--</option>
+                <option value="Faculty">Faculty</option>
+                <option value="Student">Student</option>
+              </select>
+          </div>
+
+          <button class="button button-block"/>Get Started</button>
+        
+        </form>
+      </div>
+    </div><!-- tab-content -->
+  </div>
+
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script src="/static/js/form.js"></script>
+
+</body>
+</html>
