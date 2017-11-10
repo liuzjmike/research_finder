@@ -7,7 +7,7 @@ class People(db.Model):
     last_name = db.Column('last_name', db.String(20), nullable=False)
     email = db.Column('email', db.String(30))
     db.UniqueConstraint('first_name', 'last_name', 'email', name='name_email')
-
+    @staticmethod
     def insert(netid, first_name, last_name, email):
         try:
             db.session.execute('INSERT INTO People (netid, first_name, last_name, email) VALUES (:netid, :first_name, :last_name, :email)')
@@ -15,24 +15,27 @@ class People(db.Model):
         except Exception as e:
             db.session.rollback()
             raise e
+    @staticmethod
     def doesUserExist(netid):
         try:
-           result = db.engine.execute('SELECT FROM People WHERE (netid= :netid)')
-           if len(result > 0):
-               return True
-           return False
-       except Exception as e:
-           db.session.rollback()
-           raise e
+            result = db.engine.execute('SELECT FROM People WHERE (netid= :netid)')
+            if result:
+                return True
+            return False
+        except Exception as e:
+            db.session.rollback()
+            raise e
+    @staticmethod
     def validateUser(netid, password):
-          try:
-             result = db.engine.execute('SELECT FROM People WHERE (netid= :netid AND password= :password)')
-             if len(result > 0):
-                 return True
-             return False
-         except Exception as e:
-             db.session.rollback()
-             raise e
+        try:
+            result = db.engine.execute(
+                'SELECT FROM People WHERE (netid= :netid AND password= :password)')
+            if result:
+                return True
+            return False
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
 class Department(db.Model):
     __tablename__ = 'department'
@@ -55,6 +58,7 @@ class Faculty(db.Model):
     opening = db.Column('opening', db.Integer, nullable=False)
     db.CheckConstraint('opening >= 0', name='opening')
 
+    @staticmethod
     def insert(netid, title, opening, personal_web):
         try:
             db.session.execute('INSERT INTO Faculty (netid, title, opening, personal_web) VALUES (:netid, :title, :opening, :personal_web)')
@@ -79,6 +83,7 @@ class Student(db.Model):
     start_year = db.Column('start_year', db.Integer, nullable=False)
     db.CheckConstraint('start_year >= 1838', name='start_year')
 
+    @staticmethod
     def insert(netid, status, start_year):
         try:
             db.session.execute('INSERT INTO Student (netid, status, start_year) VALUES (:netid, :status, :start_year)')
@@ -98,6 +103,7 @@ class Member(db.Model):
                         primary_key=True,
                         nullable=False)
 
+    @staticmethod
     def insert(netid, dept_id):
         try:
             db.session.execute('INSERT INTO Member (netid, dept_id) VALUES (:netid, :dept_id)')
@@ -116,6 +122,7 @@ class Interest(db.Model):
                       primary_key=True,
                       nullable=False)
 
+    @staticmethod
     def insert(netid, interests):
         try:
             for interest in interests:
