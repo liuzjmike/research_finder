@@ -1,0 +1,161 @@
+--Faculty got promoted
+UPDATE Faculty 
+SET title = 'Professor'
+WHERE netid='avm10';
+UPDATE 0
+--Faculty adds an interest
+--INSERT INTO INTEREST VALUES('avm10', 'Machine Learning');
+--Faculty removes an interest
+DELETE FROM INTEREST
+WHERE netid = 'avm10' AND field = 'Differential Privacy';
+DELETE 0
+--Browse all departments
+SELECT name FROM Department;
+               name                
+-----------------------------------
+ Computer Science
+ Electrical & Computer Engineering
+ Statistical Science
+(3 rows)
+
+--Browse all fields
+SELECT DISTINCT field FROM INTEREST;
+                field                
+-------------------------------------
+ Theory
+ Computer Architecture & Engineering
+ Biosystems & Computational Biology
+ Aritificial Intelligence
+ Operating Systems & Networking
+ Graphics
+ Human-Computer Interaction
+ Database Management Systems
+ Programming Systems
+ Security
+ Scientific Computing
+(11 rows)
+
+--Find the fields of interests for a specific person according to their netid
+SELECT field FROM INTEREST WHERE netid = 'avm10';
+ field 
+-------
+(0 rows)
+
+--As a professor, find the netid of students from specific status and start_year who are interested in his fields of interests
+SELECT DISTINCT Student.netid FROM Student, Interest as I1, Interest as I2, Faculty WHERE status = 'Undergraduate' AND start_year = 2015 AND student.netid = i1.netid AND i2.netid = 'avm10' AND i1.field = i2.field;
+ netid 
+-------
+(0 rows)
+
+--As a student, find the netid of professors who have interests in ML
+SELECT DISTINCT Faculty.netid FROM Faculty, INTEREST WHERE field = 'Machine Learning' AND Faculty.netid = INTEREST.netid;
+ netid 
+-------
+(0 rows)
+
+--As a professor, find the netid of students who have interests in ML
+SELECT DISTINCT Student.netid FROM Student, INTEREST WHERE field = 'Machine Learning' AND Student.netid = INTEREST.netid;
+ netid 
+-------
+(0 rows)
+
+--Find the name of professors in a certain department and their emails
+SELECT DISTINCT first_name, last_name, email FROM People, Faculty, Member WHERE People.netid = Faculty.netid AND Faculty.netid = Member.netid AND Member.dept_id = 'COMPSCI';
+ first_name | last_name | email 
+------------+-----------+-------
+(0 rows)
+
+--Find the name of students in a specific department and their emails.
+SELECT DISTINCT first_name, last_name, email FROM People, Student, Member WHERE People.netid = Student.netid AND Student.netid = Member.netid AND Member.dept_id = 'COMPSCI';
+ first_name | last_name |     email      
+------------+-----------+----------------
+ Dscee      | Sxgny     | ds226@duke.edu
+ Fktuy      | Dpvoa     | fd848@duke.edu
+ Szfdm      | Uizzd     | su738@duke.edu
+ Tjlxj      | Ttcgx     | tt602@duke.edu
+ Dxjqk      | Cfpsp     | dc381@duke.edu
+ Yiuzb      | Wltzk     | yw523@duke.edu
+ Kyuif      | Rozzb     | kr457@duke.edu
+ Ptnxr      | Fegnp     | pf930@duke.edu
+ Owqmu      | Mugaf     | om182@duke.edu
+ Urmov      | Auvtv     | ua688@duke.edu
+ Ervau      | Xoqze     | ex959@duke.edu
+ Ybuog      | Srzup     | ys910@duke.edu
+ Qhzyc      | Cfbcf     | qc336@duke.edu
+ Hrznc      | Abrjo     | ha156@duke.edu
+ Epnio      | Rzbbp     | er591@duke.edu
+ Irbiu      | Tbwar     | it788@duke.edu
+ Kqozd      | Kymcf     | kk582@duke.edu
+ Olasc      | Wftnc     | ow264@duke.edu
+ Kjljb      | Fjjze     | kf478@duke.edu
+ Pyrmr      | Ognmw     | po948@duke.edu
+ Odhzj      | Kwzig     | ok480@duke.edu
+ Mevgn      | Dhwjx     | md768@duke.edu
+ Drpzb      | Fpnzc     | df583@duke.edu
+ Dwolf      | Phnfy     | dp735@duke.edu
+ Upxou      | Zddbn     | uz14@duke.edu
+ Icbwl      | Rzpdt     | ir960@duke.edu
+ Poujk      | Emhsr     | pe697@duke.edu
+ Yrgxy      | Nlqgo     | yn527@duke.edu
+ Xjpuz      | Tyqvt     | xt16@duke.edu
+ Wleno      | Gfixy     | wg162@duke.edu
+ Fuqdf      | Yravk     | fy648@duke.edu
+ Dzwty      | Enssg     | de832@duke.edu
+ Fbduj      | Ynbhe     | fy295@duke.edu
+ Dsqeg      | Itruc     | di185@duke.edu
+ Vfnxb      | Gsklg     | vg343@duke.edu
+ Xhssu      | Cjqwp     | xc860@duke.edu
+ Abxho      | Ubebv     | au568@duke.edu
+ Vcfkz      | Qrjfi     | vq270@duke.edu
+ Beyao      | Lfzkz     | bl26@duke.edu
+ Ufqsh      | Ejpyg     | ue464@duke.edu
+ Zeyyq      | Wldwo     | zw574@duke.edu
+ Vcirf      | Tqkvd     | vt798@duke.edu
+ Botyq      | Qsmhh     | bq530@duke.edu
+ Wjxtp      | Zetyx     | wz821@duke.edu
+ Vfkbc      | Kgqnj     | vk317@duke.edu
+ Vwahn      | Dlrrp     | vd158@duke.edu
+ Hrurq      | Mrsfq     | hm632@duke.edu
+ Wwqxj      | Flcpv     | wf763@duke.edu
+ Dwnwj      | Gdmfw     | dg274@duke.edu
+ Hsxel      | Dazec     | hd456@duke.edu
+ Tisao      | Sootf     | ts415@duke.edu
+ Abdnt      | Yepfd     | ay509@duke.edu
+ Pflwr      | Vifdb     | pv238@duke.edu
+ Lkhiu      | Wpany     | lw354@duke.edu
+ Xecpa      | Bevvx     | xb526@duke.edu
+ Ejibp      | Xxdfg     | ex600@duke.edu
+ Sfgdg      | Jcqxn     | sj617@duke.edu
+ Jlxcc      | Ndxbg     | jn575@duke.edu
+ Cpiah      | Fvjct     | cf505@duke.edu
+ Qjkpt      | Fceed     | qf11@duke.edu
+ Njceo      | Dcvpd     | nd965@duke.edu
+ Uvhqj      | Ipwly     | ui31@duke.edu
+ Nzfll      | Ephxi     | ne51@duke.edu
+ Yyoyq      | Dnvnr     | yd714@duke.edu
+ Pesfq      | Hjxpc     | ph313@duke.edu
+ Kkaix      | Wufes     | kw683@duke.edu
+ Ljcgu      | Uhlxu     | lu452@duke.edu
+ Vpwqu      | Guolp     | vg894@duke.edu
+ Ztovl      | Uojrj     | zu964@duke.edu
+ Wxorb      | Zhnct     | wz498@duke.edu
+ Atoea      | Aegep     | aa407@duke.edu
+ Lpzkk      | Olhaz     | lo318@duke.edu
+ Xjvvi      | Gzjru     | xg297@duke.edu
+ Cofcd      | Digym     | cd713@duke.edu
+ Jprty      | Jpqhu     | jj18@duke.edu
+ Xehyh      | Ceebq     | xc692@duke.edu
+ Cxlqd      | Zptko     | cz949@duke.edu
+ Xkvfw      | Tdouk     | xt924@duke.edu
+ Hjexn      | Zrrtd     | hz765@duke.edu
+ Kmazs      | Wxubi     | kw317@duke.edu
+ Ojdyf      | Dmhil     | od5@duke.edu
+ Vvinb      | Olzxb     | vo140@duke.edu
+ Syiyc      | Hllbt     | sh148@duke.edu
+ Zzjjw      | Lxrmt     | zl428@duke.edu
+ Wohxr      | Hdjvo     | wh513@duke.edu
+ Fzsfo      | Ezbgn     | fe775@duke.edu
+ Dhquj      | Hjcva     | dh839@duke.edu
+ Llauz      | Iwiwh     | li976@duke.edu
+(88 rows)
+
