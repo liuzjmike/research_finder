@@ -18,19 +18,17 @@ class People(db.Model):
     @staticmethod
     def doesUserExist(netid):
         try:
-            result = db.engine.execute('SELECT FROM People WHERE (netid= :netid)')
-            if result:
+            result = db.engine.execute('SELECT * FROM People WHERE (netid= :netid)')
+            if len(result) > 0:
                 return True
             return False
         except Exception as e:
             db.session.rollback()
             raise e
-    @staticmethod
     def validateUser(netid, password):
         try:
-            result = db.engine.execute(
-                'SELECT FROM People WHERE (netid= :netid AND password= :password)')
-            if result:
+            result = db.engine.execute('SELECT * FROM People WHERE (netid= :netid AND password= :password)')
+            if len(result) > 0:
                 return True
             return False
         except Exception as e:
