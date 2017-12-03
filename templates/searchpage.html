@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block heading %}Search Page: {{drinker.name}}{% endblock %}
+{% block content %}
+<form action="{{url_for('Independent Study Search Page', name=drinker.name)}}" method="POST">
+  	{{form.csrf_token}}
+  		<p>
+    		Department Search: {{search.dept}}
+    		{% if search.dept.errors %}
+    			<ul>{% for error in search.dept.errors %}<li>{{error}}</li>{% endfor %}</ul>
+    		{% endif %}
+  		</p>
+  		<p>
+    		Professor Search: {{search.faculty}}
+    		{% if search.faculty.errors %}
+    			<ul>{% for error in search.faculty.errors %}<li>{{error}}</li>{% endfor %}</ul>
+    		{% endif %}
+  		</p>
+  		<p>
+    		Interests Search: {{search.Interests}}
+    		{% if search.Interests.errors %}
+    			<ul>{% for error in search.Interests.errors %}<li>{{error}}</li>{% endfor %}</ul>
+    		{% endif %}
+  		</p>
+  		<hr/>
+  <input type="reset" value="Reset"/>
+  <input type="search" value="Search"/>
+  {% if 'database' in form.errors %}<p>{{search.errors['database']}}</p>{% endif %}
+</form>
+{% endblock %}
