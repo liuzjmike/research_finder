@@ -68,7 +68,9 @@ def login():
 @app.route('/edit-person/<netid>', methods=['GET', 'POST'])
 def edit_person(netid):
     isStudent = models.Student.has_user(netid)
-    form = forms.ProfileEdit.form(netid)
+    person = db.session.query(models.People)\
+        .filter(models.People.netid == netid).one()
+    form = forms.ProfileEdit.form(person, isStudent)
 
     if form.validate_on_submit():
         try:

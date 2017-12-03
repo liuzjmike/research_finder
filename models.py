@@ -174,7 +174,8 @@ class Interest(db.Model):
         try:
             db.session.execute('DELETE FROM Interest WHERE netid = :netid',
                                        dict(netid=netid))
-            for field in interests:
+            interests_split = interests.split('\n')
+            for field in interests_split:
                 db.session.execute('INSERT INTO Interest VALUES(:netid, :field)',
                                    dict(netid=netid, field=field))
             db.session.commit()
