@@ -11,10 +11,9 @@ class SignUpFormFactory:
             netid = StringField()
             email = StringField()
             password = StringField()
-            major = StringField()
-            interests = StringField()
+            department = StringField()
             website = StringField()
-            member = RadioField('Professor or Student?', choices=[('professor', 'Professor'), ('student', 'Student')])
+            role = RadioField('Professor or Student?', choices=[('professor', 'Professor'), ('student', 'Student')])
             title = StringField()
             status = StringField()
             start_year = StringField()
@@ -23,6 +22,6 @@ class SignUpFormFactory:
     @staticmethod
     def login():
         class F(FlaskForm):
-            email = StringField()
+            netid = StringField()
             password = StringField()
         return F()
