@@ -2,6 +2,9 @@ CREATE TABLE People(netid VARCHAR(10) NOT NULL PRIMARY KEY,
                     first_name VARCHAR(20) NOT NULL,
                     last_name VARCHAR(20) NOT NULL,
                     email VARCHAR(30),
+                    website VARCHAR(50),
+                    resume BYTEA, 
+                    password VARCHAR (20) NOT NULL,
                     UNIQUE(first_name, last_name, email));
 
 CREATE TABLE Department(id VARCHAR(10) NOT NULL PRIMARY KEY,
