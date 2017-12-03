@@ -10,18 +10,18 @@
 
 <body>
   <div class="form">
-      
+
     <ul class="tab-group">
       <li class="tab active"><a href="{{url_for('signup')}}">Sign Up</a></li>
       <li class="tab"><a href="{{url_for('login')}}">Log In</a></li>
     </ul>
-    
+
     <div class="tab-content">
-      <div id="signup">   
+      <div id="signup">
         <h1>Sign Up!</h1>
-        
+
         <form action="{{url_for('signup')}}" method="post">
-        
+
           <div class="top-row">
             <div class="field-wrap">
               <label>
@@ -29,7 +29,7 @@
               </label>
               <input type="text" required autocomplete="off" />
             </div>
-        
+
             <div class="field-wrap">
               <label>
                 Last Name<span class="req">*</span>
@@ -44,34 +44,56 @@
             </label>
             <input type="text" required autocomplete="off"/>
           </div>
-              
+
           <div class="field-wrap">
             <label>
               Email Address<span class="req">*</span>
             </label>
             <input type="email" required autocomplete="off"/>
           </div>
-          
+
           <div class="field-wrap">
             <label>
               Set A Password<span class="req">*</span>
             </label>
             <input type="password" required autocomplete="off"/>
           </div>
-          
+
           <div class="field-wrap">
             <label>
               Confirm Password<span class="req">*</span>
             </label>
             <input type="password" required autocomplete="off"/>
           </div>
-              
+
           <div class="field-wrap">
             <label>
               Department 1/Major 1<span class="req">*</span>
             </label>
             <input type="text" required autocomplete="off"/>
           </div>
+<<<<<<< HEAD
+
+            <div class="field-wrap">
+            <label>
+              Department 2/Major 2
+            </label>
+            <input type="text"/>
+          </div>
+
+            <div class="field-wrap">
+            <label>
+              Personal Website
+            </label>
+            <input type="url"/>
+          </div>
+
+            <div class="field-wrap">
+              <label style="position:relative">
+                Upload Resume
+              </label>
+              <input type="file" single>
+=======
               
           <div class="field-wrap">
             <label>
@@ -92,8 +114,9 @@
               Upload Resume
             </label>
             <input type="file" single>
+>>>>>>> origin/master
           </div>
-              
+
           <div class="field-wrap">
             <label style="position:relative">
               Role
@@ -103,7 +126,7 @@
           </div>
 
           <button class="button button-block"/>Get Started</button>
-        
+
         </form>
       </div>
     </div>

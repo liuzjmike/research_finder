@@ -6,6 +6,7 @@ class People(db.Model):
     netid = db.Column('netid', db.String(10), primary_key=True, nullable=False)
     first_name = db.Column('first_name', db.String(20), nullable=False)
     last_name = db.Column('last_name', db.String(20), nullable=False)
+    password = db.Column('password', db.String(20), nullable=False)
     email = db.Column('email', db.String(30))
     db.UniqueConstraint('first_name', 'last_name', 'email', name='name_email')
 
@@ -30,7 +31,15 @@ class People(db.Model):
         user = db.session.query(cls).filter(cls.netid == netid and cls.password == password)
         return db.session.query(user.exists()).scalar()
 
-
+    def edit(old_netid, netid, first_name, last_name, password, email):
+        try:
+            db.session.execute('UPDATE People SET netid = :netid, first_name = :first_name, last_name = :last_name, password = :password, email = :email'
+                                   ' WHERE netid = :old_netid',
+                                   dict(old_netid=old_netid, netid=netid, first_name=first_name, last_name=last_name, password=password, email=email))
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
 class Department(db.Model):
     __tablename__ = 'department'
     id = db.Column('id', db.String(10), primary_key=True, nullable=False)
@@ -64,6 +73,19 @@ class Faculty(db.Model):
             db.session.rollback()
             raise e
 
+    def edit(netid, title, opening):
+        try:
+            db.session.execute('UPDATE Faculty SET title = :title, opening = :opening'
+                                   ' WHERE netid = :netid',
+                                   dict(netid=netid, title=title, opening=opening))
+            db.session.commit()            db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()
+                        raise e
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
 
 class Student(db.Model):
     __tablename__ = 'student'
@@ -92,6 +114,20 @@ class Student(db.Model):
             db.session.rollback()
             raise e
 
+    @classmethod
+    def has_user(cls, netid):
+        user = db.session.query(cls).filter(cls.netid == netid)
+        return db.session.query(user.exists()).scalar()
+
+    def edit(netid, status, start_year):
+        try:
+            db.session.execute('UPDATE Student SET status = :status, start_year = :start_year'
+                                   ' WHERE netid = :netid',
+                                   dict(netid=netid, status=status, start_year=start_year))
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
 class Member(db.Model):
     __tablename__ = 'member'
@@ -128,6 +164,20 @@ class Interest(db.Model):
     def insert(cls, netid, interests):
         try:
             db.session.add_all([cls(netid=netid, interest=interest) for interest in interests])
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
+
+    def edit(netid, interests):
+        try:
+            db.session.execute('DELETE FROM Interest WHERE netid = :netid',
+                                       dict(netid=netid))
+            interests_split = interests.split('\n')
+            for field in interests_split:
+                db.session.execute('INSERT INTO Interest VALUES(:netid, :field)',
+                                   dict(netid=netid, field=field))
             db.session.commit()
         except Exception as e:
             db.session.rollback()
