@@ -55,3 +55,11 @@ class ProfileEdit:
                 interest_list += '\n'
             interest_text = StringField(default=interest_list)
             return F()
+
+class Search:
+    def form():
+        class F(FlaskForm):
+            department_name = StringField()
+            interests = StringField()
+            professor_name = StringField()
+            return F()

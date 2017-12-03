@@ -109,7 +109,22 @@ def edit_person(netid):
 
 @app.route('/search')
 def search():
+    form = forms.Search.form()
+    if form.validate_on_submit():
+        try:
+            return redirect(url_for('search-results',
+                dept=form.department_name.data,
+                interests=form.interests.data,
+                professor=form.professor_name.data
+                ))
+        except BaseException as e:
+            form.errors['database'] = str(e)
+            return render_template('search.html')
     return render_template('search.html')
+
+@app.route('/search-results')
+def search_results(dept, interests, professor):
+
 
 @app.route('/profile/<netid>' , methods=['GET', 'POST'])
 def profile(netid):
