@@ -12,7 +12,7 @@ db = SQLAlchemy(app, session_options={'autocommit': False})
 def all_drinkers():
     return redirect(url_for('login'))
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = forms.SignUpFormFactory.signup()
     if form.validate_on_submit():
@@ -25,7 +25,8 @@ def signup():
                 form.netid.data,
                 form.first_name.data,
                 form.last_name.data,
-                form.email.data)
+                form.email.data,
+                form.password)
             # TODO: check if student or professor and store in the appropriate table
 
             if form.member.data == 'student':
@@ -50,7 +51,7 @@ def signup():
     else:
         return render_template('signup.html', form=form)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = forms.SignUpFormFactory.login()
     if form.validate_on_submit():
@@ -64,11 +65,51 @@ def login():
     else:
         return render_template('login.html', form=form)
 
+@app.route('/edit-person/<netid>', methods=['GET', 'POST'])
+def edit_person(netid):
+    isStudent = models.Student.has_user(netid)
+    form = forms.ProfileEdit.form(netid)
+
+    if form.validate_on_submit():
+        try:
+            form.errors.pop('database', None)
+            models.People.edit(
+                netid,
+                form.netid.data,
+                form.first_name.data,
+                form.last_name.data,
+                form.password.data,
+                form.email.data
+            )
+            models.Interest.edit(
+                netid,
+                form.get_interests()
+            )
+
+            if isStudent:
+                models.Student.edit(
+                    netid,
+                    form.status,
+                    form.start_year
+                )
+            else:
+                models.Faculty.edit(
+                    netid,
+                    form.title,
+                    form.opening
+                )
+            return redirect(url_for('profile', netid=netid))
+        except BaseException as e:
+            form.errors['database'] = str(e)
+            return render_template('edit-profile.html', netid=netid, form=form)
+    else:
+        return render_template('edit-profile.html', netid=netid, form=form)
+
 @app.route('/search')
 def search():
     return render_template('search.html')
 
-@app.route('/profile/<netid>')
+@app.route('/profile/<netid>' , methods=['GET', 'POST'])
 def profile(netid):
     user = db.session.query(models.People)\
         .filter(models.People.netid == netid).one()
