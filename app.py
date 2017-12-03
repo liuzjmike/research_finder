@@ -18,9 +18,7 @@ def signup():
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
-
-            existing_user = models.People.doesUserExist(form.netid.data)
-            if not existing_user:
+            if models.People.has_user(form.netid.data):
                 return render_template('signup.html', form=form)
 
             models.People.insert(
@@ -28,27 +26,24 @@ def signup():
                 form.first_name.data,
                 form.last_name.data,
                 form.email.data)
-            # check if student or professor and store in the appropriate table
+            # TODO: check if student or professor and store in the appropriate table
 
             if form.member.data == 'student':
                 # TODO: figure out how to add resume
                 models.Student.insert(
                     form.netid.data,
                     form.status.data,
-                    form.start_year.data)
+                    form.start_year.data,
+                    form.resume.data)
             else:
                 models.Faculty.insert(
                     form.netid.data,
                     form.title.data,
                     form.opening.data,
-                    form.personal_web.data)
+                    form.website.data)
 
-            # insert interests
-            interests = [x.strip() for x in (form.interests.data).split(',')]
-            models.Interest.insert(form.netid.data, interests)
-
-            # TODO: redirect to profile page (not finished)
-            return redirect(url_for('drinker', name=form.name.data))
+            # TODO: redirect to profile page
+            return redirect(url_for('profile.html', netid=form.netid.data))
         except BaseException as e:
             form.errors['database'] = str(e)
             return render_template('signup.html', form=form)
@@ -59,18 +54,13 @@ def signup():
 def login():
     form = forms.SignUpFormFactory.login()
     if form.validate_on_submit():
-        try:
-            form.errors.pop('database', None)
-
-            existing_user = models.People.validateUser(form.netid.data, form.password.data)
-            if not existing_user:
-                return render_template('login.html', form=form)
-
-            # TODO: redirect to profile page (not finished)
-            return redirect(url_for('drinker', name=form.name.data))
-        except BaseException as e:
-            form.errors['database'] = str(e)
+        form.errors.pop('database', None)
+        if not models.People.authenticate(form.netid.data, form.password.data):
+            # TODO: add error
             return render_template('login.html', form=form)
+
+        # TODO: redirect to profile page
+        return redirect(url_for('profile.html', netid=form.netid.data))
     else:
         return render_template('login.html', form=form)
 
@@ -78,34 +68,11 @@ def login():
 def search():
     return render_template('search.html')
 
-# @app.route('/drinker/<name>')
-# def drinker(name):
-#     drinker = db.session.query(models.Drinker)\
-#         .filter(models.Drinker.name == name).one()
-#     return render_template('drinker.html', drinker=drinker)
-
-# @app.route('/edit-drinker/<name>', methods=['GET', 'POST'])
-# def edit_drinker(name):
-#     drinker = db.session.query(models.Drinker)\
-#         .filter(models.Drinker.name == name).one()
-#     beers = db.session.query(models.Beer).all()
-#     bars = db.session.query(models.Bar).all()
-#     form = forms.DrinkerEditFormFactory.form(drinker, beers, bars)
-#     if form.validate_on_submit():
-#         try:
-#             form.errors.pop('database', None)
-#             models.Drinker.edit(name, form.name.data, form.address.data,
-#                                 form.get_beers_liked(), form.get_bars_frequented())
-#             return redirect(url_for('drinker', name=form.name.data))
-#         except BaseException as e:
-#             form.errors['database'] = str(e)
-#             return render_template('edit-drinker.html', drinker=drinker, form=form)
-#     else:
-#         return render_template('edit-drinker.html', drinker=drinker, form=form)
-
-# @app.template_filter('pluralize')
-# def pluralize(number, singular='', plural='s'):
-#     return singular if number in (0, 1) else plural
+@app.route('/profile/<netid>')
+def profile(netid):
+    user = db.session.query(models.People)\
+        .filter(models.People.netid == netid).one()
+    return render_template('profile.html', user=user)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

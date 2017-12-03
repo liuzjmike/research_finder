@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, IntegerField
+from wtforms import StringField, RadioField
 from wtforms.validators import DataRequired
 
 class SignUpFormFactory:
@@ -11,17 +11,17 @@ class SignUpFormFactory:
             netid = StringField()
             email = StringField()
             password = StringField()
-            major = StringField()
-            interests = StringField()
+            department = StringField()
             website = StringField()
-            member = RadioField('Professor or Student?', choices=[('professor','Professor'),('student','Student')])
+            role = RadioField('Professor or Student?', choices=[('professor', 'Professor'), ('student', 'Student')])
             title = StringField()
             status = StringField()
             start_year = StringField()
             opening = StringField()
         return F()
+    @staticmethod
     def login():
         class F(FlaskForm):
-            email = StringField()
+            netid = StringField()
             password = StringField()
         return F()

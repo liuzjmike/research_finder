@@ -2,120 +2,31 @@
 <html >
 <head>
   <meta charset="UTF-8">
-  <title>Sign-Up/Login Form</title>
-  <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen"/>
+  <title>Login</title>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' type='text/css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" type='text/css'>
+  <link rel="stylesheet" href="/static/css/form.css?version" type="text/css" media="screen"/>
 </head>
 
 <body>
   <div class="form">
       
-      <ul class="tab-group">
-        <li class="tab active"><a href="#signup">Sign Up</a></li>
-        <li class="tab"><a href="#login">Log In</a></li>
-      </ul>
-      
-      <div class="tab-content">
-        <div id="signup">   
-          <h1>Sign Up!</h1>
-          
-          <form action="/" method="post">
-          
-          <div class="top-row">
-            <div class="field-wrap">
-              <label>
-                First Name<span class="req">*</span>
-              </label>
-              <input type="text" required autocomplete="off" />
-            </div>
+    <ul class="tab-group">
+      <li class="tab"><a href="{{url_for('signup')}}">Sign Up</a></li>
+      <li class="tab active"><a href="{{url_for('login')}}">Log In</a></li>
+    </ul>
+    
+    <div class="tab-content">
+      <div id="login">
+        <h1>Welcome Back!</h1>
         
-            <div class="field-wrap">
-              <label>
-                Last Name<span class="req">*</span>
-              </label>
-              <input type="text"required autocomplete="off"/>
-            </div>
-          </div>
-
-            <div class="field-wrap">
-            <label>
-              netID<span class="req">*</span>
-            </label>
-            <input type="netID"required autocomplete="off"/>
-          </div>
-              
-          <div class="field-wrap">
-            <label>
-              Email Address<span class="req">*</span>
-            </label>
-            <input type="email"required autocomplete="off"/>
-          </div>
-          
-          <div class="field-wrap">
-            <label>
-              Set A Password<span class="req">*</span>
-            </label>
-            <input type="password"required autocomplete="off"/>
-          </div>
-              
-          <div class="field-wrap">
-            <label>
-              Department 1/Major 1<span class="req">*</span>
-            </label>
-            <input type="department"required autocomplete="off"/>
-          </div>
-              
-            <div class="field-wrap">
-            <label>
-              Department 2/Major 2
-            </label>
-            <input type="department"required autocomplete="off"/>
-          </div>
-              
-            <div class="field-wrap">
-            <label>
-              Research Interests
-            </label>
-            <input type="Research Interests"required autocomplete="off"/>
-          </div>
-              
-            <div class="field-wrap">
-            <label>
-              Personal Website
-            </label>
-                <input type="password"not required autocomplete="off"/>
-          </div>
-              
-            <div class="field-wrap">
-            <form action="/action_page.php">
-                Upload Resume: <input type="file" name="pdf" multiple>
-                <input type="submit">
-            </form>
-          </div>
-              
-          <div class="field-wrap">
-              <select name="select">
-                  <option value="--" selected>--</option>
-                <option value="Faculty">Faculty</option>
-                <option value="Student">Student</option>
-              </select>
-          </div>
-              
-          <button type="submit" class="button button-block"/>Get Started</button>
-          
-          </form>
-
-        </div>
+        <form action="{{url_for('login')}}" method="POST">
         
-        <div id="login">   
-          <h1>Welcome Back!</h1>
-          
-          <form action="/" method="post">
-          
-            <div class="field-wrap">
+          <div class="field-wrap">
             <label>
-              netID<span class="req">*</span>
+              NetID<span class="req">*</span>
             </label>
-            <input type="netID"required autocomplete="off"/>
+            <input type="text"required autocomplete="off"/>
           </div>
           
           <div class="field-wrap">
@@ -125,20 +36,17 @@
             <input type="password"required autocomplete="off"/>
           </div>
           
-          <p class="forgot"><a href="#">Forgot Password?</a></p>
+          <p class="forgot"><a href="/">Forgot Password?</a></p>
           
           <button class="button button-block"/>Log In</button>
-          
-          </form>
-
-        </div>
         
-      </div><!-- tab-content -->
-      
-</div> <!-- /form -->
-  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+        </form>
+      </div>
+    </div>
+  </div>
 
-    <script  src="js/index.js"></script>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script src="/static/js/form.js"></script>
 
 </body>
 </html>
