@@ -8,6 +8,8 @@ class People(db.Model):
     last_name = db.Column('last_name', db.String(20), nullable=False)
     password = db.Column('password', db.String(20), nullable=False)
     email = db.Column('email', db.String(30))
+    interests = orm.relationship('Interest')
+    department = orm.relationship('Department')
     db.UniqueConstraint('first_name', 'last_name', 'email', name='name_email')
 
     @classmethod
