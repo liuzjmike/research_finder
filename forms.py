@@ -4,6 +4,34 @@ from wtforms.validators import DataRequired, Email, EqualTo, \
     Optional, StopValidation, TextAreaField, URL, ValidationError
 
 
+def validate_title(form, field):
+    if form.role.data == 'faculty' and field.data not in \
+            ['Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer']:
+        raise ValidationError(
+            'Title must be in [Professor, Associate Professor, Assistant Professor, Lecturer]')
+
+
+def validate_opening(form, field):
+    if form.role.data == 'faculty':
+        DataRequired()(form, field)
+
+
+def validate_status(form, field):
+    if form.role.data == 'student' and field.data not in \
+            ['Undergraduate', 'Master', 'PhD', 'Post-Doc']:
+        raise ValidationError(
+            'Title must be in [Undergraduate, Master, PhD, Post-Doc]')
+
+
+def validate_start_year(form, field):
+    if form.role.data == 'student':
+        if not field.data:
+            raise StopValidation('Required Field.')
+        if field.data < 1838:
+            raise ValidationError(
+                'Start year cannot be earlier than 1838.')
+
+
 class SignupForm(FlaskForm):
     netid = StringField('NetID', [DataRequired()])
     first_name = StringField('First Name', [DataRequired()])
@@ -19,34 +47,10 @@ class SignupForm(FlaskForm):
     resume = FileField('Resume')
     role = RadioField(
         'Role', [DataRequired()], choices=[('faculty', 'Faculty'), ('student', 'Student')])
-    title = StringField('Title')
-    opening = IntegerField('Opening')
-    status = StringField('Status')
-    start_year = IntegerField('Start Year')
-
-    def validate_title(form, field):  # pylint: disable=E0213
-        if form.role.data == 'faculty' and field.data not in \
-                ['Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer']:
-            raise ValidationError(
-                'Title must be in [Professor, Associate Professor, Assistant Professor, Lecturer]')
-
-    def validate_opening(form, field):  # pylint: disable=E0213
-        if form.role.data == 'faculty':
-            DataRequired()(form, field)
-
-    def validate_status(form, field):  # pylint: disable=E0213
-        if form.role.data == 'student' and field.data not in \
-                ['Undergraduate', 'Master', 'PhD', 'Post-Doc']:
-            raise ValidationError(
-                'Title must be in [Undergraduate, Master, PhD, Post-Doc]')
-
-    def validate_year(form, field):  # pylint: disable=E0213
-        if form.role.data == 'student':
-            if not field.data:
-                raise StopValidation('Required Field.')
-            if field.data < 1838:
-                raise ValidationError(
-                    'Start year cannot be earlier than 1838.')
+    title = StringField('Title', [validate_title])
+    opening = IntegerField('Opening', [validate_opening])
+    status = StringField('Status', [validate_status])
+    start_year = IntegerField('Start Year', [validate_start_year])
 
 
 class LoginForm(FlaskForm):
@@ -56,6 +60,12 @@ class LoginForm(FlaskForm):
 
 def ProfileForm(person, faculty=None, student=None):
     int_fields = [interest.field for interest in person.interests]
+    if faculty:
+        role_default = 'faculty'
+    elif student:
+        role_default = 'student'
+    else:
+        role_default = None
 
     class F(FlaskForm):
         netid = StringField('NetID', [DataRequired()], default=person.netid)
@@ -66,19 +76,24 @@ def ProfileForm(person, faculty=None, student=None):
         email = StringField(
             'Email', [DataRequired(), Email()], default=person.email)
         interests = TextAreaField('Interests', default=', '.join(int_fields))
+        # TODO: Set default for departments
         department1 = StringField('Department 1', [DataRequired()])
         department2 = StringField('Department 2')
         website = StringField(
             'Website', [Optional(), URL()], default=person.website)
         resume = FileField('Resume', default=person.resume)
-
-    if faculty:
-        setattr(F, 'title', StringField('Title', default=faculty.title))
-        setattr(F, 'opening', IntegerField('Opening', default=faculty.opening))
-    if student:
-        setattr(F, 'status', StringField('Status', default=student.status))
-        setattr(F, 'start_year', IntegerField(
-            'Start Year', default=student.start_year))
+        role = RadioField('Role', [DataRequired()],
+                          choices=[('faculty', 'Faculty'),
+                                   ('student', 'Student')],
+                          default=role_default)
+        title = StringField('Title', [validate_title],
+                            default=faculty.title if faculty else None)
+        opening = IntegerField('Opening', [validate_opening],
+                               default=faculty.opening if faculty else None)
+        status = StringField('Status', [validate_status],
+                             default=student.status if student else None)
+        start_year = IntegerField('Start Year', [validate_start_year],
+                                  default=student.start_year if student else None)
     return F()
 
 
