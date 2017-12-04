@@ -111,9 +111,9 @@ def edit_person(netid):
             return redirect(url_for('profile', netid=netid))
         except BaseException as e:
             form.errors['database'] = str(e)
-            return render_template('edit-profile.html', netid=netid, form=form)
+            return render_template('edit-profile.html', user=person, form=form)
     else:
-        return render_template('edit-profile.html', netid=netid, form=form)
+        return render_template('edit-profile.html', user=person, form=form)
 
 
 @app.route('/search')

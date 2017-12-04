@@ -7,8 +7,6 @@ class People(db.Model):
     first_name = db.Column('first_name', db.String(20), nullable=False)
     last_name = db.Column('last_name', db.String(20), nullable=False)
     email = db.Column('email', db.String(30))
-    interests = orm.relationship('Interest')
-    department = orm.relationship('Department')
     website = db.Column('website', db.String(50))
     resume = db.Column('resume', db.LargeBinary)
     password = db.Column('password', db.String(20), nullable=False)

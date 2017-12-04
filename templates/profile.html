@@ -4,15 +4,23 @@
 <p>First Name: {{user.first_name}}</p>
 <p>Last Name: {{user.last_name}}</p>
 <p>Email: {{user.email}}</p>
-<p>Department: {{user.department.name}}</p>
-<p>Interests:
+<p>Website: {{user.website}}</p>
+<p>Resume: {{user.resume}}</p>
+<p>Interest(s):
   <ul>
-    {% for interest in user.interest %}
+    {% for interest in user.interests %}
     <li>{{interest.field}}</li>
     {% endfor %}
   </ul>
 </p>
+<p>Department(s):
+  <ul>
+    {% for department in user.departments %}
+    <li>{{department.name}}</li>
+    {% endfor %}
+  </ul>
+</p>
 <hr/>
-<p><a href="{{url_for('edit_drinker', name=drinker.name)}}">Edit</a>
+<p><a href="{{url_for('edit_person', netid=user.netid)}}">Edit</a>
   this information.</p>
 {% endblock %}
