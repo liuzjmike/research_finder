@@ -1,13 +1,17 @@
 {% extends 'layout.html' %}
 {% block heading %}Search Results{% endblock %}
 {% block content %}
-<form action="{{url_for('Search Results')}}" method="POST">
-	{{form.csrf_token}}
-	<p>Faculty List: </p>
-	<ul>
-		{% for f in faculty_list %}
-			<li>{{f}}</li>
-		{% endfor %}
-	</ul>
-</form>
+   <BODY>
+   	{%for faculty in results%}
+    <h3>{{faculty.firstname} {faculty.lastname}}</h3>
+    {% endfor %}
+      <UL>
+         <LI> Title: faculty.title
+         {% for dept in faculty.departments %}
+         <LI> Department: dept
+         	{% end for %}
+         <LI> Interests: faculty.interests
+      </UL>
+   </BODY>
+
 {% endblock %}
