@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+{% extends 'layout.html' %} {% block heading %}Search Page: {% endblock %} {% block content %}
+
+<body>
+=======
 {% extends 'layout.html' %}
 {% block css %}
 <link rel="stylesheet" href="/static/css/searchpage.css" type="text/css" media="screen"/>
@@ -5,6 +10,7 @@
 {% block heading %}Search{% endblock %}
 {% block content %}
     <body>
+>>>>>>> 21b7eb7424369e5b47b3341e093f8dca5f25ab83
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -19,35 +25,47 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="department">
-                            <form method="get" action="/search" id="Department Search">
-                                <input name="q" type="text" size="40" placeholder="Department Search" />
-                                <center>
-                                    <button type="search" class="custombtn">
-                                        <img src="../static/img/searchbutton resized.png" alt="search" />
-                                    </button>
-                                </center>
-                            </form>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="professor">
-                            <form method="get" action="/search" id="Professor Search">
-                                <input name="q" type="text" size="40" placeholder="Professor Search" />
-                                <center>
-                                    <button type="search" class="custombtn">
-                                        <img src="../static/img/searchbutton resized.png" alt="search" />
-                                    </button>
-                                </center>
-                            </form>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="interests">
-                                <form method="get" action="/search" id="Interests Search">
-                                    <input name="q" type="text" size="40" placeholder="Interests Search" />
+                            <center>
+                                <form method="get" action="/search" id="Department Search">
+                                    <input name="q" type="text" size="40" placeholder="Department Search" />
+
                                     <center>
                                         <button type="search" class="custombtn">
-                                            <img src="../static/img/searchbutton resized.png" alt="search" />
+                                            <img src="../static/img/search3.png" alt="search" />
                                         </button>
                                     </center>
+
                                 </form>
-                            </div>
+                            </center>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="professor">
+                            <center>
+                                <form method="get" action="/search" id="Professor Search">
+                                    <input name="q" type="text" size="40" placeholder="Professor Search" />
+
+                                    <center>
+                                        <button type="search" class="custombtn">
+                                            <img src="../static/img/search3.png" alt="search" />
+                                        </button>
+                                    </center>
+
+                                </form>
+                            </center>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="interests">
+                            <center>
+                                <form method="get" action="/search" id="Interests Search">
+                                    <input name="q" type="text" size="40" placeholder="Interests Search" />
+
+                                    <center>
+                                        <button type="search" class="custombtn">
+                                            <img src="../static/img/search3.png" alt="search" />
+                                        </button>
+                                    </center>
+
+                                </form>
+                            </center>
+                        </div>
                     </div>
                 </div>
             </div>
