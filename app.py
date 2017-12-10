@@ -1,9 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, request
+import itertools
+
+from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 
-import models
 import forms
-import itertools
+import models
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -147,8 +148,9 @@ def search():
             return render_template('searchpage.html')
     return render_template('searchpage.html')
 
+
 @app.route('/search-prof/<term>', methods=['GET', 'POST'])
-def search-prof():
+def search_prof():
     results = []
     prof_netid = set()
     search_term = request.args.get('term')
@@ -158,24 +160,27 @@ def search-prof():
         prof_netid.add(prof['netid'])
 
     results_temp = []
-    results_prof = db.session.query(models.People).filter(People.last_name.like('%' + search_term + '%')).all()
+    results_prof = db.session.query(models.People).filter(
+        models.People.last_name.like('%' + search_term + '%')).all()
     for prof in results_prof:
         if prof['netid'] in prof_netid:
             results_temp.append(prof['first_name'] + prof['last_name'])
             prof_netid.remove(prof['netid'])
-    results_prof = db.session.query(models.People).filter(People.first_name.like('%' + search_term + '%')).all()
+    results_prof = db.session.query(models.People).filter(
+        models.People.first_name.like('%' + search_term + '%')).all()
     for prof in results_prof:
         if prof['netid'] in prof_netid:
             results_temp.append(prof['first_name'] + prof['last_name'])
             prof_netid.remove(prof['netid'])
 
-    for i in min(range(5), len(results_temp))
+    for i in min(range(5), len(results_temp)):
         results.append(results_temp[i])
-    flattened = list(itertools.chain.from_iterable(result[0]))
+    flattened = list(itertools.chain.from_iterable(results[0]))
     return flattened
 
+
 @app.route('/search-dept/<term>', methods=['GET', 'POST'])
-def search-dept():
+def search_dept():
     results = []
     dept_name = set()
     search_term = request.args.get('term')
@@ -185,19 +190,21 @@ def search-dept():
         dept_name.add(dept['name'])
 
     results_temp = []
-    results_dept = db.session.query(models.Member).filter(Member.name.like('%' + search_term + '%')).all()
+    results_dept = db.session.query(models.Member).filter(
+        models.Member.name.like('%' + search_term + '%')).all()
     for dept in results_dept:
         if dept['name'] in dept_name:
             results_temp.append(dept['name'])
             dept_name.remove(dept['name'])
 
-    for i in min(range(5), len(results_temp))
+    for i in min(range(5), len(results_temp)):
         results.append(results_temp[i])
-    flattened = list(itertools.chain.from_iterable(result[0]))
+    flattened = list(itertools.chain.from_iterable(results[0]))
     return flattened
 
+
 @app.route('/search-interests/<term>', methods=['GET', 'POST'])
-def search-interests():
+def search_interests():
     results = []
     field = set()
     search_term = request.args.get('term')
@@ -207,16 +214,18 @@ def search-interests():
         field.add(interest['field'])
 
     results_temp = []
-    results_interest = db.session.query(models.Interest).filter(Interest.field.like('%' + search_term + '%')).all()
+    results_interest = db.session.query(models.Interest).filter(
+        models.Interest.field.like('%' + search_term + '%')).all()
     for interest in results_interest:
         if interest['field'] in field:
             results_temp.append(interest['field'])
             field.remove(interest['field'])
 
-    for i in min(range(5), len(results_temp))
+    for i in min(range(5), len(results_temp)):
         results.append(results_temp[i])
-    flattened = list(itertools.chain.from_iterable(result[0]))
+    flattened = list(itertools.chain.from_iterable(results[0]))
     return flattened
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
