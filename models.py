@@ -78,15 +78,11 @@ class Faculty(db.Model):
             db.session.execute('UPDATE Faculty SET title = :title, opening = :opening'
                                    ' WHERE netid = :netid',
                                    dict(netid=netid, title=title, opening=opening))
-            db.session.commit()            db.session.commit()
-                    except Exception as e:
-                        db.session.rollback()
-                        raise e
+            db.session.commit()            
         except Exception as e:
             db.session.rollback()
             raise e
-
-
+       
 class Student(db.Model):
     __tablename__ = 'student'
     netid = db.Column('netid', db.String(10),

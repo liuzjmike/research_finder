@@ -1,29 +1,24 @@
 {% extends 'layout.html' %}
-{% block heading %}Search Page: {{drinker.name}}{% endblock %}
+{% block heading %}Search Page: {% endblock %}
 {% block content %}
-<form action="{{url_for('Independent Study Search Page', name=drinker.name)}}" method="POST">
-  	{{form.csrf_token}}
-  		<p>
-    		Department Search: {{search.dept}}
-    		{% if search.dept.errors %}
-    			<ul>{% for error in search.dept.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    		{% endif %}
-  		</p>
-  		<p>
-    		Professor Search: {{search.faculty}}
-    		{% if search.faculty.errors %}
-    			<ul>{% for error in search.faculty.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    		{% endif %}
-  		</p>
-  		<p>
-    		Interests Search: {{search.Interests}}
-    		{% if search.Interests.errors %}
-    			<ul>{% for error in search.Interests.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    		{% endif %}
-  		</p>
-  		<hr/>
-  <input type="reset" value="Reset"/>
-  <input type="search" value="Search"/>
-  {% if 'database' in form.errors %}<p>{{search.errors['database']}}</p>{% endif %}
-</form>
+<div class="container">
+  <div class="row">
+                                    <div class="col-md-6">
+                                    <!-- Nav tabs --><div class="card">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#department" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+                                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+                                        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>                                       
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="home">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+                                        <div role="tabpanel" class="tab-pane" id="profile">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
+                                        <div role="tabpanel" class="tab-pane" id="messages">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>                          
+                                    </div>
+</div>
+                                </div>
+  </div>
+</div>
 {% endblock %}

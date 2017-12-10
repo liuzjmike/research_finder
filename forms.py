@@ -54,4 +54,4 @@ class ProfileEdit:
                 interest_list += field
                 interest_list += '\n'
             interest_text = StringField(default=interest_list)
-            return F()
+        return F()
