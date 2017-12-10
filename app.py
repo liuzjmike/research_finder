@@ -8,76 +8,251 @@ app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
 
+
 @app.route('/')
 def all_drinkers():
     # return redirect(url_for('login'))
     return redirect(url_for('searchpage'))
 
+<<<<<<< HEAD
 @app.route('/searchpage')
 def searchpage(): 
     return render_template('searchpage.html')
 
 @app.route('/signup')
+=======
+
+@app.route('/signup', methods=['GET', 'POST'])
+>>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
 def signup():
-    form = forms.SignUpFormFactory.signup()
+    form = forms.SignupForm()
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
-            if models.People.has_user(form.netid.data):
-                return render_template('signup.html', form=form)
+
+            # TODO: Deal with existing user
+            # if models.People.has_user(form.netid.data):
+            #     return render_template('signup.html', form=form)
 
             models.People.insert(
                 form.netid.data,
                 form.first_name.data,
                 form.last_name.data,
+<<<<<<< HEAD
                 form.email.data)
             # TODO: check if student or professor and store in the appropriate table
+=======
+                form.email.data,
+                form.website.data,
+                form.resume.data,
+                form.password)
+>>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
 
-            if form.member.data == 'student':
-                # TODO: figure out how to add resume
+            if form.role.data == 'student':
                 models.Student.insert(
                     form.netid.data,
                     form.status.data,
-                    form.start_year.data,
-                    form.resume.data)
+                    form.start_year.data)
             else:
                 models.Faculty.insert(
                     form.netid.data,
                     form.title.data,
-                    form.opening.data,
-                    form.website.data)
-
-            # TODO: redirect to profile page
-            return redirect(url_for('profile.html', netid=form.netid.data))
+                    form.opening.data)
+            return redirect(url_for('profile', netid=form.netid.data))
         except BaseException as e:
             form.errors['database'] = str(e)
             return render_template('signup.html', form=form)
     else:
         return render_template('signup.html', form=form)
 
+<<<<<<< HEAD
 @app.route('/login')
+=======
+
+@app.route('/login', methods=['GET', 'POST'])
+>>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
 def login():
-    form = forms.SignUpFormFactory.login()
+    form = forms.SignupForm()
     if form.validate_on_submit():
         form.errors.pop('database', None)
         if not models.People.authenticate(form.netid.data, form.password.data):
             # TODO: add error
             return render_template('login.html', form=form)
-
-        # TODO: redirect to profile page
-        return redirect(url_for('profile.html', netid=form.netid.data))
+        return redirect(url_for('profile', netid=form.netid.data))
     else:
         return render_template('login.html', form=form)
 
+<<<<<<< HEAD
 @app.route('/search')
 def search():
     return render_template('searchpage.html')
 
 @app.route('/profile/<netid>')
+=======
+
+@app.route('/edit-person/<netid>', methods=['GET', 'POST'])
+def edit_person(netid):
+    person = db.session.query(models.People)\
+        .filter(models.People.netid == netid).one()
+    student = models.Student.get(netid)
+    if student:
+        faculty = None
+    else:
+        faculty = models.Faculty.get(netid)
+    form = forms.ProfileForm(person, student, faculty)
+
+    if form.validate_on_submit():
+        try:
+            form.errors.pop('database', None)
+            models.People.edit(
+                netid,
+                form.netid.data,
+                form.first_name.data,
+                form.last_name.data,
+                form.email.data,
+                form.website.data,
+                form.resume.data,
+                form.password.data
+            )
+
+            # TODO: Update interests
+            # models.Interest.edit(
+            #     netid,
+            #     form.get_interests()
+            # )
+
+            if student:
+                models.Student.edit(
+                    netid,
+                    form.status,
+                    form.start_year
+                )
+            elif faculty:
+                models.Faculty.edit(
+                    netid,
+                    form.title,
+                    form.opening
+                )
+            return redirect(url_for('profile', netid=netid))
+        except BaseException as e:
+            form.errors['database'] = str(e)
+            return render_template('edit-profile.html', user=person, form=form)
+    else:
+        return render_template('edit-profile.html', user=person, form=form)
+
+
+@app.route('/search')
+def search():
+    form = forms.SearchForm()
+    if form.validate_on_submit():
+        try:
+            return redirect(url_for('search-results',
+                                    dept=form.department_name.data,
+                                    interests=form.interests.data,
+                                    professor=form.professor_name.data))
+        except BaseException as e:
+            form.errors['database'] = str(e)
+            return render_template('search.html')
+    return render_template('search.html')
+
+
+class SearchResult:
+    def __init__(self, netid, first_name, last_name, dept, interests):
+        self.netid = netid
+        self.first_name = first_name
+        self.last_name = last_name
+        self.dept = dept
+        self.interests = interests
+    def get_netid(self):
+        return self.netid
+    def get_last_name(self):
+        return self.last_name
+
+@app.route('/search-results')
+def search_results(dept, interests, professor):
+    # netid_maps maps the netid to index in the list of search results
+    netid_map = {}
+    last_index = 0
+
+    results = []
+
+    # find all netid (of professors) with matching first name
+    users = db.session.query(models.People)\
+        .filter(models.People.first_name == professor).all()
+    for user in users:
+        if user['netid'] not in netid_map:
+            netid_map['netid'] = last_index
+            last_index = last_index + 1
+            prof_department = db.session.query(models.Member)\
+                .filter(models.Member.netid == user['netid']).one()
+            results.append(SearchResult(
+                user['netid'],
+                user['first_name'],
+                user['last_name'],
+                prof_department,
+                []))
+    # find all netid (of professors) with matching last name
+    users = db.session.query(models.People)\
+        .filter(models.People.last_name == professor).all()
+    for user in users:
+        if user['netid'] not in netid_map:
+            netid_map['netid'] = last_index
+            last_index = last_index + 1
+            prof_department = db.session.query(models.Member)\
+                .filter(models.Member.netid == user['netid']).one()
+            results.append(SearchResult(
+                user['netid'],
+                user['first_name'],
+                user['last_name'],
+                prof_department,
+                []))
+    # find all netid (of professors) with matching department
+    users = db.session.query(models.People)\
+        .filter(models.Member.name == dept).all()
+    for user in users:
+        if user['netid'] not in netid_map:
+            netid_map['netid'] = last_index
+            last_index = last_index + 1
+            results.append(SearchResult(
+                user['netid'],
+                user['first_name'],
+                user['last_name'],
+                dept,
+                []))
+    # find all netid (of professors) with matching Interests
+    for interest in interests
+        users = db.session.query(models.Interest)\
+            .filter(models.Interest.field == interest).all()
+        for user in users:
+            if user['netid'] in netid_map:
+                index = user['netid']
+                results[index].interests.append(interest)
+            else:
+                netid_map['netid'] = last_index
+                last_index = last_index + 1
+                prof = db.session.query(models.People)\
+                    .filter(models.People.netid == user['netid']).all()
+                prof_department = db.session.query(models.Member)\
+                    .filter(models.Member.netid == user['netid']).one()
+                results.append(SearchResult(
+                    prof['netid'],
+                    prof['first_name'],
+                    prof['last_name'],
+                    prof_department,
+                    [interest]))
+
+    # sort results by alphabetical order
+    sorted_results = sorted(results, key = SearchResult.get_last_name)
+
+    # TODO: redirect to search results page
+
+@app.route('/profile/<netid>', methods=['GET', 'POST'])
+>>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
 def profile(netid):
     user = db.session.query(models.People)\
         .filter(models.People.netid == netid).one()
     return render_template('profile.html', user=user)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

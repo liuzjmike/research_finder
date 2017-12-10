@@ -1,7 +1,7 @@
 CREATE TABLE People(netid VARCHAR(10) NOT NULL PRIMARY KEY,
                     first_name VARCHAR(20) NOT NULL,
                     last_name VARCHAR(20) NOT NULL,
-                    email VARCHAR(30),
+                    email VARCHAR(30) NOT NULL,
                     website VARCHAR(50),
                     resume BYTEA, 
                     password VARCHAR (20) NOT NULL,
