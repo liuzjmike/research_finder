@@ -131,10 +131,95 @@ def search():
     return render_template('search.html')
 
 
+class SearchResult:
+    def __init__(self, netid, first_name, last_name, dept, interests):
+        self.netid = netid
+        self.first_name = first_name
+        self.last_name = last_name
+        self.dept = dept
+        self.interests = interests
+    def get_netid(self):
+        return self.netid
+    def get_last_name(self):
+        return self.last_name
+
 @app.route('/search-results')
 def search_results(dept, interests, professor):
-    pass
+    # netid_maps maps the netid to index in the list of search results
+    netid_map = {}
+    last_index = 0
 
+    results = []
+
+    # find all netid (of professors) with matching first name
+    users = db.session.query(models.People)\
+        .filter(models.People.first_name == professor).all()
+    for user in users:
+        if user['netid'] not in netid_map:
+            netid_map['netid'] = last_index
+            last_index = last_index + 1
+            prof_department = db.session.query(models.Member)\
+                .filter(models.Member.netid == user['netid']).one()
+            results.append(SearchResult(
+                user['netid'],
+                user['first_name'],
+                user['last_name'],
+                prof_department,
+                []))
+    # find all netid (of professors) with matching last name
+    users = db.session.query(models.People)\
+        .filter(models.People.last_name == professor).all()
+    for user in users:
+        if user['netid'] not in netid_map:
+            netid_map['netid'] = last_index
+            last_index = last_index + 1
+            prof_department = db.session.query(models.Member)\
+                .filter(models.Member.netid == user['netid']).one()
+            results.append(SearchResult(
+                user['netid'],
+                user['first_name'],
+                user['last_name'],
+                prof_department,
+                []))
+    # find all netid (of professors) with matching department
+    users = db.session.query(models.People)\
+        .filter(models.Member.name == dept).all()
+    for user in users:
+        if user['netid'] not in netid_map:
+            netid_map['netid'] = last_index
+            last_index = last_index + 1
+            results.append(SearchResult(
+                user['netid'],
+                user['first_name'],
+                user['last_name'],
+                dept,
+                []))
+    # find all netid (of professors) with matching Interests
+    for interest in interests
+        users = db.session.query(models.Interest)\
+            .filter(models.Interest.field == interest).all()
+        for user in users:
+            if user['netid'] in netid_map:
+                index = user['netid']
+                results[index].interests.append(interest)
+            else:
+                netid_map['netid'] = last_index
+                last_index = last_index + 1
+                prof = db.session.query(models.People)\
+                    .filter(models.People.netid == user['netid']).all()
+                prof_department = db.session.query(models.Member)\
+                    .filter(models.Member.netid == user['netid']).one()
+                results.append(SearchResult(
+                    prof['netid'],
+                    prof['first_name'],
+                    prof['last_name'],
+                    prof_department,
+                    [interest]))
+
+    # sort results by alphabetical order
+    sorted_results = sorted(results, key = SearchResult.get_last_name)
+
+    # TODO: redirect to search results page
 
 @app.route('/profile/<netid>', methods=['GET', 'POST'])
 def profile(netid):
