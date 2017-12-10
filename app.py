@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 
 import models
 import forms
+import itertools
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -138,105 +139,76 @@ def search():
             return render_template('searchpage.html')
     return render_template('searchpage.html')
 
-
-# @app.route('/search')
-# def searchpage():
-#     return render_template('searchpage.html')
-
-
-class SearchResult(object):
-    def __init__(self, netid, first_name, last_name, dept, interests):
-        self.netid = netid
-        self.first_name = first_name
-        self.last_name = last_name
-        self.dept = dept
-        self.interests = interests
-
-    def get_netid(self):
-        return self.netid
-
-    def get_last_name(self):
-        return self.last_name
-
-
-@app.route('/search-results')
-def search_results(dept, interests, professor):
-    # netid_maps maps the netid to index in the list of search results
-    netid_map = {}
-    last_index = 0
-
+@app.route('/search-prof/<term>', methods=['GET', 'POST'])
+def search-prof():
     results = []
+    prof_netid = set()
+    search_term = request.args.get('term')
 
-    # find all netid (of professors) with matching first name
-    users = db.session.query(models.People)\
-        .filter(models.People.first_name == professor).all()
-    for user in users:
-        if user['netid'] not in netid_map:
-            netid_map['netid'] = last_index
-            last_index = last_index + 1
-            prof_department = db.session.query(models.Member)\
-                .filter(models.Member.netid == user['netid']).one()
-            results.append(SearchResult(
-                user['netid'],
-                user['first_name'],
-                user['last_name'],
-                prof_department,
-                []))
-    # find all netid (of professors) with matching last name
-    users = db.session.query(models.People)\
-        .filter(models.People.last_name == professor).all()
-    for user in users:
-        if user['netid'] not in netid_map:
-            netid_map['netid'] = last_index
-            last_index = last_index + 1
-            prof_department = db.session.query(models.Member)\
-                .filter(models.Member.netid == user['netid']).one()
-            results.append(SearchResult(
-                user['netid'],
-                user['first_name'],
-                user['last_name'],
-                prof_department,
-                []))
-    # find all netid (of professors) with matching department
-    users = db.session.query(models.People)\
-        .filter(models.Member.name == dept).all()
-    for user in users:
-        if user['netid'] not in netid_map:
-            netid_map['netid'] = last_index
-            last_index = last_index + 1
-            results.append(SearchResult(
-                user['netid'],
-                user['first_name'],
-                user['last_name'],
-                dept,
-                []))
-    # find all netid (of professors) with matching Interests
-    for interest in interests:
-        users = db.session.query(models.Interest)\
-            .filter(models.Interest.field == interest).all()
-        for user in users:
-            if user['netid'] in netid_map:
-                index = user['netid']
-                results[index].interests.append(interest)
-            else:
-                netid_map['netid'] = last_index
-                last_index = last_index + 1
-                prof = db.session.query(models.People)\
-                    .filter(models.People.netid == user['netid']).all()
-                prof_department = db.session.query(models.Member)\
-                    .filter(models.Member.netid == user['netid']).one()
-                results.append(SearchResult(
-                    prof['netid'],
-                    prof['first_name'],
-                    prof['last_name'],
-                    prof_department,
-                    [interest]))
+    results_prof = db.session.query(models.Faculty).all()
+    for prof in results_prof:
+        prof_netid.add(prof['netid'])
 
-    # sort results by alphabetical order
-    sorted_results = sorted(results, key=SearchResult.get_last_name)
+    results_temp = []
+    results_prof = db.session.query(models.People).filter(People.last_name.like('%' + search_term + '%')).all()
+    for prof in results_prof:
+        if prof['netid'] in prof_netid:
+            results_temp.append(prof['first_name'] + prof['last_name'])
+            prof_netid.remove(prof['netid'])
+    results_prof = db.session.query(models.People).filter(People.first_name.like('%' + search_term + '%')).all()
+    for prof in results_prof:
+        if prof['netid'] in prof_netid:
+            results_temp.append(prof['first_name'] + prof['last_name'])
+            prof_netid.remove(prof['netid'])
 
-    # TODO: redirect to search results page
+    for i in min(range(5), len(results_temp))
+        results.append(results_temp[i])
+    flattened = list(itertools.chain.from_iterable(result[0]))
+    return flattened
 
+@app.route('/search-dept/<term>', methods=['GET', 'POST'])
+def search-dept():
+    results = []
+    dept_name = set()
+    search_term = request.args.get('term')
+
+    results_dept = db.session.query(models.Member).all()
+    for dept in results_dept:
+        dept_name.add(dept['name'])
+
+    results_temp = []
+    results_dept = db.session.query(models.Member).filter(Member.name.like('%' + search_term + '%')).all()
+    for dept in results_dept:
+        if dept['name'] in dept_name:
+            results_temp.append(dept['name'])
+            dept_name.remove(dept['name'])
+
+    for i in min(range(5), len(results_temp))
+        results.append(results_temp[i])
+    flattened = list(itertools.chain.from_iterable(result[0]))
+    return flattened
+
+@app.route('/search-interests/<term>', methods=['GET', 'POST'])
+def search-interests():
+    results = []
+    field = set()
+    search_term = request.args.get('term')
+
+    results_interest = db.session.query(models.Interest).all()
+    for interest in results_interest:
+        field.add(interest['field'])
+
+    results_temp = []
+    results_interest = db.session.query(models.Interest).filter(Interest.field.like('%' + search_term + '%')).all()
+    for interest in results_interest:
+        if interest['field'] in field:
+            results_temp.append(interest['field'])
+            field.remove(interest['field'])
+
+    for i in min(range(5), len(results_temp))
+        results.append(results_temp[i])
+    flattened = list(itertools.chain.from_iterable(result[0]))
+    return flattened
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
