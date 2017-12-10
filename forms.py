@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import FileField, IntegerField, PasswordField, RadioField, StringField
+from wtforms import FileField, IntegerField, PasswordField, RadioField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, \
-    Optional, StopValidation, TextAreaField, URL, ValidationError
+    Optional, StopValidation, URL, ValidationError
 
 
 def validate_title(form, field):

@@ -12,7 +12,7 @@ class People(db.Model):
     password = db.Column('password', db.String(20), nullable=False)
     db.UniqueConstraint('first_name', 'last_name', 'email', name='name_email')
     interests = db.relationship('Interest')
-    departments = db.relatonship('Member')
+    departments = db.relationship('Member')
 
     @classmethod
     def insert(cls, netid, first_name, last_name, email, website, resume, password):
@@ -87,22 +87,16 @@ class Faculty(db.Model):
             return row.one()
         return None
 
-#     @classmethod
-#     def edit(cls, netid, title, opening):
-#         try:
-# <<<<<<< HEAD
-#             db.session.execute('UPDATE Faculty SET title = :title, opening = :opening'
-#                                    ' WHERE netid = :netid',
-#                                    dict(netid=netid, title=title, opening=opening))
-#             db.session.commit()            
-# =======
-#             cls.update().where(cls.netid == netid).values(title=title, opening=opening)
-#             db.session.commit()
-# >>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
-#         except Exception as e:
-#             db.session.rollback()
-#             raise e
-       
+    @classmethod
+    def edit(cls, netid, title, opening):
+        try:
+            cls.update().where(cls.netid == netid).values(title=title, opening=opening)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
+
 class Student(db.Model):
     __tablename__ = 'student'
     netid = db.Column('netid', db.String(10),

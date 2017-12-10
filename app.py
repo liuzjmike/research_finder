@@ -24,6 +24,7 @@ def signup():
             # TODO: Deal with existing user
             # if models.People.has_user(form.netid.data):
             #     return render_template('signup.html', form=form)
+            # TODO: Add Member row
 
             models.People.insert(
                 form.netid.data,
