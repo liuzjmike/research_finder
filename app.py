@@ -24,6 +24,7 @@ def signup():
             # TODO: Deal with existing user
             # if models.People.has_user(form.netid.data):
             #     return render_template('signup.html', form=form)
+            # TODO: Add Member row
 
             models.People.insert(
                 form.netid.data,
@@ -210,7 +211,7 @@ def search_results(dept, interests, professor):
                 dept,
                 []))
     # find all netid (of professors) with matching Interests
-    for interest in interests
+    for interest in interests:
         users = db.session.query(models.Interest)\
             .filter(models.Interest.field == interest).all()
         for user in users:

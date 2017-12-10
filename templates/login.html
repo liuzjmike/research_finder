@@ -1,52 +1,22 @@
-<!DOCTYPE html>
-<html >
-<head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' type='text/css'>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" type='text/css'>
-  <link rel="stylesheet" href="/static/css/form.css?version" type="text/css" media="screen"/>
-</head>
-
-<body>
-  <div class="form">
-      
-    <ul class="tab-group">
-      <li class="tab"><a href="{{url_for('signup')}}">Sign Up</a></li>
-      <li class="tab active"><a href="{{url_for('login')}}">Log In</a></li>
-    </ul>
-    
-    <div class="tab-content">
-      <div id="login">
-        <h1>Welcome Back!</h1>
-        
-        <form action="{{url_for('login')}}" method="POST">
-        
-          <div class="field-wrap">
-            <label>
-              NetID<span class="req">*</span>
-            </label>
-            <input type="text"required autocomplete="off"/>
-          </div>
-          
-          <div class="field-wrap">
-            <label>
-              Password<span class="req">*</span>
-            </label>
-            <input type="password"required autocomplete="off"/>
-          </div>
-          
-          <p class="forgot"><a href="/">Forgot Password?</a></p>
-          
-          <button class="button button-block"/>Log In</button>
-        
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-  <script src="/static/js/form.js"></script>
-
-</body>
-</html>
+{% extends 'layout.html' %}
+{% block heading %}Login{% endblock %}
+{% block content %}
+<form action="{{url_for('login')}}" method="POST">
+  {{form.csrf_token}}
+  <p>
+    {{form.netid.label}}: {{form.netid}}
+    {% if form.netid.errors %}
+    <ul>{% for error in form.netid.errors %}<li>{{error}}</li>{% endfor %}</ul>
+    {% endif %}
+  </p>
+  <p>
+    {{form.password.label}}: {{form.password}}
+    {% if form.password.errors %}
+    <ul>{% for error in form.password.errors %}<li>{{error}}</li>{% endfor %}</ul>
+    {% endif %}
+  </p>
+  <hr/>
+  <input type="submit" value="Submit"/>
+  {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
+</form>
+{% endblock %}

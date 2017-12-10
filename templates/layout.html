@@ -4,8 +4,8 @@
     <title>Research Finder</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css" media="screen"/>
-    <link rel="stylesheet" href="/static/css/searchpage.css" type="text/css" media="screen"/>
-    <script src="/static/js/jquery-3.2.1.js"></script>
+    {% block css %}{% endblock %}
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="/static/js/bootstrap.js"></script>
   </head>
   <body>
@@ -13,5 +13,6 @@
     <hr/>
     <h2 id="heading">{% block heading %}{% endblock %}</h2>
     {% block content %}{% endblock %}
+    {% block jquery %}{% endblock %}
   </body>
 </html>
