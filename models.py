@@ -26,15 +26,21 @@ class People(db.Model):
             raise e
 
     @classmethod
-    def has_user(cls, netid):
+    def contains(cls, netid):
         user = db.session.query(cls).filter(cls.netid == netid)
         return db.session.query(user.exists()).scalar()
 
     @classmethod
+    def get(cls, netid):
+        row = db.session.query(cls).filter(cls.netid == netid)
+        if db.session.query(row.exists()).scalar():
+            return row.one()
+        return None
+
+    @classmethod
     def authenticate(cls, netid, password):
-        user = db.session.query(cls).filter(
-            cls.netid == netid and cls.password == password)
-        return db.session.query(user.exists()).scalar()
+        user = cls.get(netid)
+        return user and user.password == password
 
     @classmethod
     def edit(cls, old_netid, netid, first_name, last_name, email, website, resume, password):

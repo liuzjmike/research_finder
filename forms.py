@@ -1,8 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import FileField, IntegerField, PasswordField, \
-    RadioField, StringField, TextAreaField
+from flask_wtf.file import FileField
+from wtforms import IntegerField, PasswordField, RadioField, \
+    StringField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, \
-    Optional, StopValidation, URL, ValidationError
+    Optional, URL, ValidationError
+
+
+data_required = DataRequired()
+optional = Optional()
 
 
 def validate_title(form, field):
@@ -14,7 +19,9 @@ def validate_title(form, field):
 
 def validate_opening(form, field):
     if form.role.data == 'faculty':
-        DataRequired()(form, field)
+        data_required(form, field)
+    else:
+        optional(form, field)
 
 
 def validate_status(form, field):
@@ -26,28 +33,35 @@ def validate_status(form, field):
 
 def validate_start_year(form, field):
     if form.role.data == 'student':
-        if not field.data:
-            raise StopValidation('Required Field.')
+        data_required(form, field)
         if field.data < 1838:
             raise ValidationError(
                 'Start year cannot be earlier than 1838.')
+    else:
+        optional(form, field)
+
+
+def validate_department2(form, field):
+    if field.data == form.department1.data:
+        raise ValidationError('Department1 and Department2 must be different.')
 
 
 class SignupForm(FlaskForm):
-    netid = StringField('NetID', [DataRequired()])
-    first_name = StringField('First Name', [DataRequired()])
-    last_name = StringField('Last Name', [DataRequired()])
-    email = StringField('Email', [DataRequired(), Email()])
-    password = PasswordField('Password', [DataRequired()])
+    netid = StringField('NetID', [data_required])
+    first_name = StringField('First Name', [data_required])
+    last_name = StringField('Last Name', [data_required])
+    email = StringField('Email', [data_required, Email()])
+    password = PasswordField('Password', [data_required])
     confirm = PasswordField(
-        'Confirm Password', [DataRequired(),
+        'Confirm Password', [data_required,
                              EqualTo('password', message='Passwords must match')])
-    department1 = StringField('Department 1', [DataRequired()])
-    department2 = StringField('Department 2')
-    website = StringField('Website', [Optional(), URL()])
+    department1 = StringField('Department 1', [data_required])
+    department2 = StringField(
+        'Department 2', [optional, validate_department2])
+    website = StringField('Website', [optional, URL()])
     resume = FileField('Resume')
     role = RadioField(
-        'Role', [DataRequired()], choices=[('faculty', 'Faculty'), ('student', 'Student')])
+        'Role', [data_required], choices=[('faculty', 'Faculty'), ('student', 'Student')])
     title = StringField('Title', [validate_title])
     opening = IntegerField('Opening', [validate_opening])
     status = StringField('Status', [validate_status])
@@ -55,8 +69,8 @@ class SignupForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    netid = StringField('NetID', [DataRequired()])
-    password = PasswordField('Password', [DataRequired()])
+    netid = StringField('NetID', [data_required])
+    password = PasswordField('Password', [data_required])
 
 
 def ProfileForm(person, faculty=None, student=None):
@@ -69,21 +83,22 @@ def ProfileForm(person, faculty=None, student=None):
         role_default = None
 
     class F(FlaskForm):
-        netid = StringField('NetID', [DataRequired()], default=person.netid)
+        netid = StringField('NetID', [data_required], default=person.netid)
         first_name = StringField(
-            'First Name', [DataRequired()], default=person.first_name)
+            'First Name', [data_required], default=person.first_name)
         last_name = StringField(
-            'Last Name', [DataRequired()], default=person.last_name)
+            'Last Name', [data_required], default=person.last_name)
         email = StringField(
-            'Email', [DataRequired(), Email()], default=person.email)
+            'Email', [data_required, Email()], default=person.email)
         interests = TextAreaField('Interests', default=', '.join(int_fields))
         # TODO: Set default for departments
-        department1 = StringField('Department 1', [DataRequired()])
-        department2 = StringField('Department 2')
+        department1 = StringField('Department 1', [data_required])
+        department2 = StringField(
+            'Department 2', [optional, validate_department2])
         website = StringField(
-            'Website', [Optional(), URL()], default=person.website)
+            'Website', [optional, URL()], default=person.website)
         resume = FileField('Resume', default=person.resume)
-        role = RadioField('Role', [DataRequired()],
+        role = RadioField('Role', [data_required],
                           choices=[('faculty', 'Faculty'),
                                    ('student', 'Student')],
                           default=role_default)

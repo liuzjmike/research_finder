@@ -21,10 +21,9 @@ def signup():
         try:
             form.errors.pop('database', None)
 
-            # TODO: Deal with existing user
-            # if models.People.has_user(form.netid.data):
-            #     return render_template('signup.html', form=form)
-            # TODO: Add Member row
+            if models.People.contains(form.netid.data):
+                form.netid.errors.append("User already exists.")
+                return render_template('signup.html', form=form)
 
             models.People.insert(
                 form.netid.data,
@@ -33,7 +32,16 @@ def signup():
                 form.email.data,
                 form.website.data,
                 form.resume.data,
-                form.password)
+                form.password.data)
+            models.Member.insert(
+                form.netid.data,
+                form.department1.data
+            )
+            if form.department2.data:
+                models.Member.insert(
+                    form.netid.data,
+                    form.department2.data
+                )
 
             if form.role.data == 'student':
                 models.Student.insert(
@@ -55,11 +63,11 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = forms.SignupForm()
+    form = forms.LoginForm()
     if form.validate_on_submit():
         form.errors.pop('database', None)
         if not models.People.authenticate(form.netid.data, form.password.data):
-            # TODO: add error
+            form.password.errors.append("Invalid NetID or password.")
             return render_template('login.html', form=form)
         return redirect(url_for('profile', netid=form.netid.data))
     else:
@@ -75,7 +83,7 @@ def edit_person(netid):
         faculty = None
     else:
         faculty = models.Faculty.get(netid)
-    form = forms.ProfileForm(person, student, faculty)
+    form = forms.ProfileForm(person, faculty, student)
 
     if form.validate_on_submit():
         try:
@@ -100,14 +108,14 @@ def edit_person(netid):
             if student:
                 models.Student.edit(
                     netid,
-                    form.status,
-                    form.start_year
+                    form.status.data,
+                    form.start_year.data
                 )
             elif faculty:
                 models.Faculty.edit(
                     netid,
-                    form.title,
-                    form.opening
+                    form.title.data,
+                    form.opening.data
                 )
             return redirect(url_for('profile', netid=netid))
         except BaseException as e:
