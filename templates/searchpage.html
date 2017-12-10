@@ -4,43 +4,53 @@
 {% endblock %}
 {% block heading %}Search{% endblock %}
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-md-6">
-      <!-- Nav tabs -->
-      <div class="card">
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active">
-            <a href="#department" aria-controls="home" role="tab" data-toggle="tab">Home</a>
-          </li>
-          <li role="presentation">
-            <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a>
-          </li>
-          <li role="presentation">
-            <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a>
-          </li>
-        </ul>
+    <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Nav tabs -->
+                <div class="card">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#department" aria-controls="Department Search" role="tab" data-toggle="tab">Department Search</a></li>
+                        <li role="presentation"><a href="#professor" aria-controls="Professor Search" role="tab" data-toggle="tab">Professor Search</a></li>
+                        <li role="presentation"><a href="#interests" aria-controls="Interests Search" role="tab" data-toggle="tab">Interests Search</a></li>
+                    </ul>
 
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <div role="tabpanel" class="tab-pane active" id="home">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-            standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make
-            a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing
-            Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions
-            of Lorem Ipsum.</div>
-          <div role="tabpanel" class="tab-pane" id="profile">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-            standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make
-            a type specimen book.</div>
-          <div role="tabpanel" class="tab-pane" id="messages">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-            standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make
-            a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing
-            Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions
-            of Lorem Ipsum.</div>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="department">
+                            <form method="get" action="/search" id="Department Search">
+                                <input name="q" type="text" size="40" placeholder="Department Search" />
+                                <center>
+                                    <button type="search" class="custombtn">
+                                        <img src="../static/img/searchbutton resized.png" alt="search" />
+                                    </button>
+                                </center>
+                            </form>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="professor">
+                            <form method="get" action="/search" id="Professor Search">
+                                <input name="q" type="text" size="40" placeholder="Professor Search" />
+                                <center>
+                                    <button type="search" class="custombtn">
+                                        <img src="../static/img/searchbutton resized.png" alt="search" />
+                                    </button>
+                                </center>
+                            </form>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="interests">
+                                <form method="get" action="/search" id="Interests Search">
+                                    <input name="q" type="text" size="40" placeholder="Interests Search" />
+                                    <center>
+                                        <button type="search" class="custombtn">
+                                            <img src="../static/img/searchbutton resized.png" alt="search" />
+                                        </button>
+                                    </center>
+                                </form>
+                            </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
+</body>
 {% endblock %}

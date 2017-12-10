@@ -135,13 +135,13 @@ def search():
                                     professor=form.professor_name.data))
         except BaseException as e:
             form.errors['database'] = str(e)
-            return render_template('search.html')
-    return render_template('search.html')
-
-
-@app.route('/search')
-def searchpage():
+            return render_template('searchpage.html')
     return render_template('searchpage.html')
+
+
+# @app.route('/search')
+# def searchpage():
+#     return render_template('searchpage.html')
 
 
 class SearchResult(object):
