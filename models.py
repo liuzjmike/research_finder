@@ -87,21 +87,21 @@ class Faculty(db.Model):
             return row.one()
         return None
 
-    @classmethod
-    def edit(cls, netid, title, opening):
-        try:
-<<<<<<< HEAD
-            db.session.execute('UPDATE Faculty SET title = :title, opening = :opening'
-                                   ' WHERE netid = :netid',
-                                   dict(netid=netid, title=title, opening=opening))
-            db.session.commit()            
-=======
-            cls.update().where(cls.netid == netid).values(title=title, opening=opening)
-            db.session.commit()
->>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
-        except Exception as e:
-            db.session.rollback()
-            raise e
+#     @classmethod
+#     def edit(cls, netid, title, opening):
+#         try:
+# <<<<<<< HEAD
+#             db.session.execute('UPDATE Faculty SET title = :title, opening = :opening'
+#                                    ' WHERE netid = :netid',
+#                                    dict(netid=netid, title=title, opening=opening))
+#             db.session.commit()            
+# =======
+#             cls.update().where(cls.netid == netid).values(title=title, opening=opening)
+#             db.session.commit()
+# >>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
+#         except Exception as e:
+#             db.session.rollback()
+#             raise e
        
 class Student(db.Model):
     __tablename__ = 'student'

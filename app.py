@@ -134,13 +134,13 @@ def search():
                                     professor=form.professor_name.data))
         except BaseException as e:
             form.errors['database'] = str(e)
-            return render_template('search.html')
-    return render_template('search.html')
-
-
-@app.route('/search')
-def searchpage():
+            return render_template('searchpage.html')
     return render_template('searchpage.html')
+
+
+# @app.route('/search')
+# def searchpage():
+#     return render_template('searchpage.html')
 
 
 class SearchResult(object):
@@ -210,7 +210,7 @@ def search_results(dept, interests, professor):
                 dept,
                 []))
     # find all netid (of professors) with matching Interests
-    for interest in interests
+    for interest in interests:
         users = db.session.query(models.Interest)\
             .filter(models.Interest.field == interest).all()
         for user in users:
