@@ -10,20 +10,11 @@ db = SQLAlchemy(app, session_options={'autocommit': False})
 
 
 @app.route('/')
-def all_drinkers():
-    # return redirect(url_for('login'))
-    return redirect(url_for('searchpage'))
+def index():
+    return redirect(url_for('login'))
 
-<<<<<<< HEAD
-@app.route('/searchpage')
-def searchpage(): 
-    return render_template('searchpage.html')
-
-@app.route('/signup')
-=======
 
 @app.route('/signup', methods=['GET', 'POST'])
->>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
 def signup():
     form = forms.SignupForm()
     if form.validate_on_submit():
@@ -38,15 +29,10 @@ def signup():
                 form.netid.data,
                 form.first_name.data,
                 form.last_name.data,
-<<<<<<< HEAD
-                form.email.data)
-            # TODO: check if student or professor and store in the appropriate table
-=======
                 form.email.data,
                 form.website.data,
                 form.resume.data,
                 form.password)
->>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
 
             if form.role.data == 'student':
                 models.Student.insert(
@@ -65,12 +51,8 @@ def signup():
     else:
         return render_template('signup.html', form=form)
 
-<<<<<<< HEAD
-@app.route('/login')
-=======
 
 @app.route('/login', methods=['GET', 'POST'])
->>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
 def login():
     form = forms.SignupForm()
     if form.validate_on_submit():
@@ -82,13 +64,6 @@ def login():
     else:
         return render_template('login.html', form=form)
 
-<<<<<<< HEAD
-@app.route('/search')
-def search():
-    return render_template('searchpage.html')
-
-@app.route('/profile/<netid>')
-=======
 
 @app.route('/edit-person/<netid>', methods=['GET', 'POST'])
 def edit_person(netid):
@@ -141,6 +116,13 @@ def edit_person(netid):
         return render_template('edit-profile.html', user=person, form=form)
 
 
+@app.route('/profile/<netid>', methods=['GET', 'POST'])
+def profile(netid):
+    user = db.session.query(models.People)\
+        .filter(models.People.netid == netid).one()
+    return render_template('profile.html', user=user)
+
+
 @app.route('/search')
 def search():
     form = forms.SearchForm()
@@ -156,17 +138,25 @@ def search():
     return render_template('search.html')
 
 
-class SearchResult:
+@app.route('/search')
+def searchpage():
+    return render_template('searchpage.html')
+
+
+class SearchResult(object):
     def __init__(self, netid, first_name, last_name, dept, interests):
         self.netid = netid
         self.first_name = first_name
         self.last_name = last_name
         self.dept = dept
         self.interests = interests
+
     def get_netid(self):
         return self.netid
+
     def get_last_name(self):
         return self.last_name
+
 
 @app.route('/search-results')
 def search_results(dept, interests, professor):
@@ -242,16 +232,9 @@ def search_results(dept, interests, professor):
                     [interest]))
 
     # sort results by alphabetical order
-    sorted_results = sorted(results, key = SearchResult.get_last_name)
+    sorted_results = sorted(results, key=SearchResult.get_last_name)
 
     # TODO: redirect to search results page
-
-@app.route('/profile/<netid>', methods=['GET', 'POST'])
->>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
-def profile(netid):
-    user = db.session.query(models.People)\
-        .filter(models.People.netid == netid).one()
-    return render_template('profile.html', user=user)
 
 
 if __name__ == '__main__':

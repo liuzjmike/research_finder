@@ -96,40 +96,8 @@ def ProfileForm(person, faculty=None, student=None):
                                   default=student.start_year if student else None)
     return F()
 
-<<<<<<< HEAD
-class ProfileEdit:
-    def form(person, isStudent):
-        class F(FlaskForm):
-            first_name = StringField(default=person.first_name)
-            last_name = StringFiled(default=person.last_name)
-            netid = StringField(default=person.netid)
-            email = StringField(default=person.email)
-            password = StringField()
-            confirmPassword = StringField()
-            if isStudent:
-                # get student object
-                student = db.session.query(models.Student)\
-                    .filter(models.Student.netid == person.netid)
-                status = StringField(default=student.status)
-                start_year = StringField(default=student.start_year)
-            else:
-                faculty = db.session.query(models.Faculty)\
-                    .filter(models.Faculty.netid == person.netid)
-                title = StringField(default=faculty.title)
-                opening = StringField(default=faculty.opening)
-
-            interests = db.session.query(models.Interest)\
-                .filter(models.Interest.netid == person.netid).all()
-            interest_list = ''
-            for field in interests:
-                interest_list += field
-                interest_list += '\n'
-            interest_text = StringField(default=interest_list)
-        return F()
-=======
 
 class SearchForm(FlaskForm):
     department = StringField('Department')
     faculty = StringField('Faculty')
     interest = StringField('Interest')
->>>>>>> 91958e88cd2bfdb47bad79c49ad8fb3c0a9d9dae
