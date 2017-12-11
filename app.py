@@ -278,8 +278,6 @@ def search():
             dept = dept.lower()
             interests = interests.lower()
 
-            print('abc', file=sys.stderr)
-
             netid_set = set()
             professors = db.session.query(models.Faculty).all()
             for prof in professors:
@@ -325,17 +323,10 @@ def search():
 
             # sort the matches
             sorted_results = sorted(matches, key=lambda x: x.last_name)
-<<<<<<< Updated upstream
-            return render_template('search_results.html', matches=sorted_results)
-        except BaseException as e:
-            form.errors['database'] = str(e)
-            return render_template('searchpage.html')
-=======
             return render_template('searchresults.html', user=sorted_results)
         except BaseException as e:
             form.errors['database'] = str(e)
             return render_template('searchpage.html', form=form)
->>>>>>> Stashed changes
     else:
         return render_template('searchpage.html', form=form)
 
