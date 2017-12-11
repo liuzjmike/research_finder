@@ -1,32 +1,27 @@
 {% extends 'layout.html' %}
-{% block css %}
-{% endblock %}
 {% block heading %}Search Results{% endblock %}
 {% block content %}
-<body>
+    {% for user in matches %}
     <ul>
-        <h3>{{user.first_name}}</h3>
+        <h3><a href="{{url_for('profile', netid=user.netid)}}">{{user.first_name}} {{user.last_name}}</a></h3>
         <ul>
-            <li> Title: {{user.title}} </li>
-
             <li> Departments:
                 <ul>
-                    {% for dept in user.departments %}
+                    {% for dept in user.departments|sort(attribute='dept_id') %}
                     <li>{{dept.dept_id}}</li>
                     {% endfor %}
                 </ul>
             </li>
+            <li>Email: {{user.email}}</li>
+            <li>Website: {{user.website}}</li>
             <li> Interests:
                 <ul>
-                    {% for interest in user.interests %}
+                    {% for interest in user.interests|sort(attribute='field') %}
                     <li>{{interest.field}}</li>
                     {% endfor %}
                 </ul>
             </li>
         </ul>
       </ul>
-</body>
-
-{% endblock %}
-{% block jquery %}
+   {% endfor %}
 {% endblock %}
