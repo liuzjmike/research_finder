@@ -3,7 +3,7 @@ CREATE TABLE People(netid VARCHAR(10) NOT NULL PRIMARY KEY,
                     last_name VARCHAR(20) NOT NULL,
                     email VARCHAR(30) NOT NULL,
                     website VARCHAR(50),
-                    resume BYTEA, 
+                    resume VARCHAR(10), 
                     password VARCHAR (20) NOT NULL,
                     UNIQUE(first_name, last_name, email));
 

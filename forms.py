@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import IntegerField, PasswordField, RadioField, \
     SelectField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, \
@@ -60,7 +60,7 @@ class SignupForm(FlaskForm):
         'Department 2', [optional, validate_department2])
     interests = TextAreaField('Interests')
     website = StringField('Website', [optional, URL()])
-    resume = FileField('Resume')
+    resume = FileField('Resume', [FileAllowed(['pdf'])])
     role = RadioField(
         'Role', [data_required], choices=[('faculty', 'Faculty'), ('student', 'Student')])
     title = SelectField('Title', [validate_title],
@@ -109,7 +109,8 @@ def ProfileForm(person, faculty=None, student=None):
         interests = TextAreaField('Interests', default=', '.join(int_fields))
         website = StringField(
             'Website', [optional, URL()], default=person.website)
-        resume = FileField('Resume', default=person.resume)
+        resume = FileField(
+            'Resume', [FileAllowed(['pdf'])], default=person.resume)
         role = RadioField('Role', [data_required],
                           choices=[('faculty', 'Faculty'),
                                    ('student', 'Student')],

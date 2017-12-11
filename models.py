@@ -8,7 +8,7 @@ class People(db.Model):
     last_name = db.Column('last_name', db.String(20), nullable=False)
     email = db.Column('email', db.String(30))
     website = db.Column('website', db.String(50))
-    resume = db.Column('resume', db.LargeBinary)
+    resume = db.Column('resume', db.String(10))
     password = db.Column('password', db.String(20), nullable=False)
     db.UniqueConstraint('first_name', 'last_name', 'email', name='name_email')
     interests = db.relationship('Interest')

@@ -1,5 +1,6 @@
 import itertools
 import json
+import os
 
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -23,18 +24,22 @@ def signup():
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
-
             if models.People.contains(form.netid.data):
                 form.netid.errors.append("User already exists.")
                 return render_template('signup.html', form=form)
-
+            if form.resume.data:
+                resume_name = '%s.pdf' % form.netid.data
+                form.resume.data.save(os.path.join(
+                    app.instance_path, 'resume', resume_name))
+            else:
+                resume_name = None
             models.People.insert(
                 form.netid.data,
                 form.first_name.data,
                 form.last_name.data,
                 form.email.data,
                 form.website.data,
-                form.resume.data,
+                resume_name,
                 form.password.data)
             models.Member.insert(
                 form.netid.data,
@@ -86,8 +91,8 @@ def login():
         return render_template('login.html', form=form)
 
 
-@app.route('/edit-person/<netid>', methods=['GET', 'POST'])
-def edit_person(netid):
+@app.route('/edit-profile/<netid>', methods=['GET', 'POST'])
+def edit_profile(netid):
     person = db.session.query(models.People)\
         .filter(models.People.netid == netid).one()
     student = models.Student.get(netid)
@@ -100,15 +105,31 @@ def edit_person(netid):
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
+            if form.resume.data:
+                resume_name = '%s.pdf' % netid
+                form.resume.data.save(os.path.join(
+                    app.root_path, 'resume', resume_name))
+            else:
+                resume_name = None
             models.People.edit(
                 netid,
                 form.first_name.data,
                 form.last_name.data,
                 form.email.data,
                 form.website.data,
-                form.resume.data,
+                resume_name,
                 person.password
             )
+            models.Member.query.filter_by(netid=netid).delete()
+            models.Member.insert(
+                netid,
+                form.department1.data
+            )
+            if form.department2.data:
+                models.Member.insert(
+                    netid,
+                    form.department2.data
+                )
             interests = []
             for interest in form.interests.data.split(','):
                 interest = interest.strip()
@@ -250,40 +271,47 @@ def search():
                 profs.add(user['netid'])
             for prof in profs:
                 if prof in netid_set:
-                    matches.append(db.session.query(models.People).filter(models.People.netid == prof).one())
+                    matches.append(db.session.query(models.People).filter(
+                        models.People.netid == prof).one())
                     netid_set.remove(prof)
 
             # search by dept
-            dept_id = db.session.query(models.Department.id).filter(models.Department.name == dept).one()
-            users_in_dept = db.session.query(models.Member).filter(models.Member.dept_id == dept_id).all()
+            dept_id = db.session.query(models.Department.id).filter(
+                models.Department.name == dept).one()
+            users_in_dept = db.session.query(models.Member).filter(
+                models.Member.dept_id == dept_id).all()
             valid_profs = set()
             for user in users_in_dept:
                 if user['netid'] in netid_set:
                     valid_profs.add(user['netid'])
             for prof_netid in valid_profs:
-                user = db.session.query(models.People).filter(models.People.netid == prof_netid).one()
+                user = db.session.query(models.People).filter(
+                    models.People.netid == prof_netid).one()
                 matches.append(user)
                 netid_set.remove(prof_netid)
 
             # search by interests
-            users_in_interests = db.session.query(models.Interest).filter(models.Interest.field == interests).all()
+            users_in_interests = db.session.query(models.Interest).filter(
+                models.Interest.field == interests).all()
             valid_profs = set()
             for user in users_in_interests:
                 if user['netid'] in netid_set:
                     valid_profs.add(user['netid'])
             for prof_netid in valid_profs:
-                user = db.session.query(models.People).filter(models.People.netid == prof_netid).one()
+                user = db.session.query(models.People).filter(
+                    models.People.netid == prof_netid).one()
                 matches.append(user)
                 netid_set.remove(prof_netid)
 
             # sort the matches
-            sorted_results = sorted(matches, key = matches.last_name)
+            sorted_results = sorted(matches, key=matches.last_name)
             return render_template('search_results.html', matches=sorted_results)
         except BaseException as e:
             form1.errors['database'] = str(e)
             return render_template('searchpage.html')
     else:
         return render_template('searchpage.html', form=form)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
