@@ -2,113 +2,125 @@
 {% block css %}
 <link rel="stylesheet" href="/static/css/user_info.css" type="text/css" media="screen"/>
 {% endblock %}
-{% block heading %}Sign Up!{% endblock %}
+{% block heading %}
+<div class="container"><div class="page-hearder">Sign Up</div></div>
+{% endblock %}
 {% block content %}
-<form action="{{url_for('signup')}}" method="POST">
-  {{form.csrf_token}}
-  <p>
-    {{form.netid.label}}: {{form.netid}}
-    {% if form.netid.errors %}
-    <ul>{% for error in form.netid.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.first_name.label}}: {{form.first_name}}
-    {% if form.first_name.errors %}
-    <ul>{% for error in form.first_name.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.last_name.label}}: {{form.last_name}}
-    {% if form.last_name.errors %}
-    <ul>{% for error in form.last_name.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.email.label}}: {{form.email}}
-    {% if form.email.errors %}
-    <ul>{% for error in form.email.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.password.label}}: {{form.password}}
-    {% if form.password.errors %}
-    <ul>{% for error in form.password.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.confirm.label}}: {{form.confirm}}
-    {% if form.confirm.errors %}
-    <ul>{% for error in form.confirm.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.department1.label}}: {{form.department1}}
-    {% if form.department1.errors %}
-    <ul>{% for error in form.department1.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.department2.label}}: {{form.department2}}
-    {% if form.department2.errors %}
-    <ul>{% for error in form.department2.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.interests.label}}: {{form.interests}}
-    {% if form.interests.errors %}
-    <ul>{% for error in form.interests.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.website.label}}: {{form.website}}
-    {% if form.website.errors %}
-    <ul>{% for error in form.website.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p>
-    {{form.resume.label}}: {{form.resume}}
-    {% if form.resume.errors %}
-    <ul>{% for error in form.resume.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p id="role">
-    {{form.role.label}}: {{form.role}}
-    {% if form.role.errors %}
-    <ul>{% for error in form.role.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p class="faculty">
-    {{form.title.label}}: {{form.title}}
-    {% if form.title.errors %}
-    <ul>{% for error in form.title.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p class="faculty">
-    {{form.opening.label}}: {{form.opening}}
-    {% if form.opening.errors %}
-    <ul>{% for error in form.opening.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p class="student">
-    {{form.status.label}}: {{form.status}}
-    {% if form.status.errors %}
-    <ul>{% for error in form.status.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <p class="student">
-    {{form.start_year.label}}: {{form.start_year}}
-    {% if form.start_year.errors %}
-    <ul>{% for error in form.start_year.errors %}<li>{{error}}</li>{% endfor %}</ul>
-    {% endif %}
-  </p>
-  <hr/>
-  <input type="submit" value="Submit"/>
-  {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
-</form>
-<p>
-  <a href="{{url_for('login')}}">Already have an account?</a>
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-14">
+      <div class="panel panel-default">
+        <div class="panel-body">
+        <form action="{{url_for('signup')}}" method="POST">
+          {{form.csrf_token}}
+          <p>
+            {{form.netid.label}}: {{form.netid}}
+            {% if form.netid.errors %}
+            <ul>{% for error in form.netid.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.first_name.label}}: {{form.first_name}}
+            {% if form.first_name.errors %}
+            <ul>{% for error in form.first_name.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.last_name.label}}: {{form.last_name}}
+            {% if form.last_name.errors %}
+            <ul>{% for error in form.last_name.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.email.label}}: {{form.email}}
+            {% if form.email.errors %}
+            <ul>{% for error in form.email.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.password.label}}: {{form.password}}
+            {% if form.password.errors %}
+            <ul>{% for error in form.password.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.confirm.label}}: {{form.confirm}}
+            {% if form.confirm.errors %}
+            <ul>{% for error in form.confirm.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.department1.label}}: {{form.department1}}
+            {% if form.department1.errors %}
+            <ul>{% for error in form.department1.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.department2.label}}: {{form.department2}}
+            {% if form.department2.errors %}
+            <ul>{% for error in form.department2.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.interests.label}}: {{form.interests}}
+            {% if form.interests.errors %}
+            <ul>{% for error in form.interests.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.website.label}}: {{form.website}}
+            {% if form.website.errors %}
+            <ul>{% for error in form.website.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p>
+            {{form.resume.label}}: {{form.resume}}
+            {% if form.resume.errors %}
+            <ul>{% for error in form.resume.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p id="role">
+            {{form.role.label}}: {{form.role}}
+            {% if form.role.errors %}
+            <ul>{% for error in form.role.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p class="faculty">
+            {{form.title.label}}: {{form.title}}
+            {% if form.title.errors %}
+            <ul>{% for error in form.title.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p class="faculty">
+            {{form.opening.label}}: {{form.opening}}
+            {% if form.opening.errors %}
+            <ul>{% for error in form.opening.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p class="student">
+            {{form.status.label}}: {{form.status}}
+            {% if form.status.errors %}
+            <ul>{% for error in form.status.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <p class="student">
+            {{form.start_year.label}}: {{form.start_year}}
+            {% if form.start_year.errors %}
+            <ul>{% for error in form.start_year.errors %}<li>{{error}}</li>{% endfor %}</ul>
+            {% endif %}
+          </p>
+          <hr/>
+          <input type="submit" value="Submit"/>
+          {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
+        </form>
+        <p>
+          <a href="{{url_for('login')}}">Already have an account?</a>
+        </p>
+        </div><!--/panel-body-->
+      </div><!--/panel-->
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block jquery %}
 <script src="/static/js/user_info.js"></script>
