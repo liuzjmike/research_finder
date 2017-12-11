@@ -225,8 +225,28 @@ def search_interests():
 
 @app.route('/search')
 def search():
-    form = forms.SearchForm()
-    if form.validate_on_submit():
+    form1 = forms.SearchForm(prefix="form1")
+    form2 = forms.SearchForm(prefix="form2")
+    form3 = forms.SearchForm(prefix="form3")
+    if form1.validate_on_submit() and form1.submit.data:
+        try:
+            return redirect(url_for('search-results', type='prof', search_term=form1.search_term.data))
+        except BaseException as e:
+            form1.errors['database'] = str(e)
+            return render_template('searchpage.html')
+    if form2.validate_on_submit() and form2.submit.data:
+        try:
+            return redirect(url_for('search-results', type='dept', search_term=form2.search_term.data))
+        except BaseException as e:
+            form2.errors['database'] = str(e)
+            return render_template('searchpage.html')
+    if form3.validate_on_submit() and form3.submit.data:
+        try:
+            return redirect(url_for('search-results', type='interest', search_term=form3.search_term.data))
+        except BaseException as e:
+            form3.errors['database'] = str(e)
+            return render_template('searchpage.html')
+        '''
         try:
             return redirect(url_for('search-results',
                                     dept=form.department_name.data,
@@ -236,6 +256,7 @@ def search():
             form.errors['database'] = str(e)
             return render_template('searchpage.html')
     return render_template('searchpage.html')
+    '''
 
 
 class SearchResult:
@@ -258,6 +279,7 @@ class SearchResult:
 def search_results(type, search_term):
 
     matches = []
+    search_term = search_term.lower()
 
     netid_set = set()
     profs = db.session.query(models.Faculty).all()
@@ -265,16 +287,28 @@ def search_results(type, search_term):
         netid_set.add(prof['netid'])
 
     if type == 'prof':  # search by prof
+        profs = set()
         users = db.session.query(models.People).filter(
             models.People.last_name == search_term).all()
         for user in users:
-            if user['netid'] in netid_set:
+            profs.add(user['netid'])
+        users = db.session.query(models.People).filter(
+            models.People.first_name == search_term).all()
+        for user in users:
+            profs.add(user['netid'])
+        for prof in profs:
+            if prof in netid_set:
+                user = db.session.query(models.People).filter(
+                    models.People.netid == prof).one()
                 dept = db.session.query(models.Member).filter(
-                    models.Member.netid == user['netid']).one()
-                title = db.session.query(models.Faculty).filter(
-                    models.Faculty.netid == user['netid']).one()
+                    models.Member.netid == prof).one()
+                titles = db.session.query(models.Faculty).filter(
+                    models.Faculty.netid == prof).all()
                 fields = db.session.query(models.Interest).filter(
-                    models.Interest.netid == user['netid']).all()
+                    models.Interest.netid == prof).all()
+                title = []
+                for t in titles:
+                    title.append(t['name'])
                 interests = []
                 count = 0
                 for field in fields:
@@ -286,7 +320,7 @@ def search_results(type, search_term):
                         user['netid'],
                         user['first_name'],
                         user['last_name'],
-                        title['title'],
+                        title,
                         dept['name'],
                         interests
                     )
@@ -303,10 +337,13 @@ def search_results(type, search_term):
         for prof_netid in valid_profs:
             user = db.session.query(models.People).filter(
                 models.People.netid == prof_netid).one()
-            title = db.session.query(models.Faculty).filter(
-                models.Faculty.netid == user['netid']).one()
+            titles = db.session.query(models.Faculty).filter(
+                models.Faculty.netid == prof_netid).all()
             fields = db.session.query(models.Interest).filter(
                 models.Interest.netid == prof_netid).all()
+            title = []
+            for t in titles:
+                title.append(t['name'])
             interests = []
             count = 0
             for field in fields:
@@ -318,7 +355,7 @@ def search_results(type, search_term):
                     user['netid'],
                     user['first_name'],
                     user['last_name'],
-                    title['title'],
+                    title,
                     search_term,
                     interests
                 )
@@ -334,24 +371,28 @@ def search_results(type, search_term):
         for prof_netid in valid_profs:
             user = db.session.query(models.People).filter(
                 models.People.netid == prof_netid).one()
-            title = db.session.query(models.Faculty).filter(
-                models.Faculty.netid == user['netid']).one()
+            titles = db.session.query(models.Faculty).filter(
+                models.Faculty.netid == prof_netid).all()
             dept = db.session.query(models.Member).filter(
                 models.Member.netid == prof.netid).one()
             fields = db.session.query(models.Interest).filter(
                 models.Interest.netid == prof_netid).all()
+            title = []
+            for t in titles:
+                title.append(t['name'])
             matches.append(
                 SearchResult(
                     user['netid'],
                     user['first_name'],
                     user['last_name'],
-                    title['title'],
+                    title,
                     search_term,
                     [search_term]
                 )
             )
         sorted_results = sorted(matches, key=SearchResult.get_last_name)
-    json.dumps([o.dump() for o in sorted_results])
+    result = json.dumps([o.dump() for o in sorted_results])
+    return render_template('search_results.html', matches=result)
 
 
 if __name__ == '__main__':
