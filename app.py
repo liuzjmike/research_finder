@@ -93,7 +93,9 @@ def login():
 
 @app.route('/profile/<netid>', methods=['GET', 'POST'])
 def profile(netid):
-    user = db.session.query(models.People)\
+    if netid == -1:
+        return redirect(url_for('login'))
+    user = db.session.query(models.People) \
         .filter(models.People.netid == netid).one()
     return render_template('profile.html', user=user)
 
@@ -244,176 +246,73 @@ def search_interests():
     return flattened
 
 
-@app.route('/search')
+@app.route('/search', methods=['GET', 'POST'])
 def search():
-    form1 = forms.SearchForm(prefix="form1")
-    form2 = forms.SearchForm(prefix="form2")
-    form3 = forms.SearchForm(prefix="form3")
-    if form1.validate_on_submit() and form1.submit.data:
+    form = forms.SearchForm()
+    if form.validate_on_submit():
         try:
-            return redirect(url_for('search-results', type='prof', search_term=form1.search_term.data))
+            matches = []
+            name = form.name.data
+            dept = form.dept.data
+            interests = form.interests.data
+
+            netid_set = set()
+            profs = db.session.query(models.Faculty).all()
+            for prof in profs:
+                netid_set.add(prof['netid'])
+
+            # search by prof
+            profs = set()
+            users = db.session.query(models.People).filter(
+                models.People.last_name == name).all()
+            for user in users:
+                profs.add(user['netid'])
+            users = db.session.query(models.People).filter(
+                models.People.first_name == name).all()
+            for user in users:
+                profs.add(user['netid'])
+            for prof in profs:
+                if prof in netid_set:
+                    matches.append(db.session.query(models.People).filter(
+                        models.People.netid == prof).one())
+                    netid_set.remove(prof)
+
+            # search by dept
+            dept_id = db.session.query(models.Department.id).filter(
+                models.Department.name == dept).one()
+            users_in_dept = db.session.query(models.Member).filter(
+                models.Member.dept_id == dept_id).all()
+            valid_profs = set()
+            for user in users_in_dept:
+                if user['netid'] in netid_set:
+                    valid_profs.add(user['netid'])
+            for prof_netid in valid_profs:
+                user = db.session.query(models.People).filter(
+                    models.People.netid == prof_netid).one()
+                matches.append(user)
+                netid_set.remove(prof_netid)
+
+            # search by interests
+            users_in_interests = db.session.query(models.Interest).filter(
+                models.Interest.field == interests).all()
+            valid_profs = set()
+            for user in users_in_interests:
+                if user['netid'] in netid_set:
+                    valid_profs.add(user['netid'])
+            for prof_netid in valid_profs:
+                user = db.session.query(models.People).filter(
+                    models.People.netid == prof_netid).one()
+                matches.append(user)
+                netid_set.remove(prof_netid)
+
+            # sort the matches
+            sorted_results = sorted(matches, key=matches.last_name)
+            return render_template('search_results.html', matches=sorted_results)
         except BaseException as e:
             form1.errors['database'] = str(e)
             return render_template('searchpage.html')
-    if form2.validate_on_submit() and form2.submit.data:
-        try:
-            return redirect(url_for('search-results', type='dept', search_term=form2.search_term.data))
-        except BaseException as e:
-            form2.errors['database'] = str(e)
-            return render_template('searchpage.html')
-    if form3.validate_on_submit() and form3.submit.data:
-        try:
-            return redirect(url_for('search-results', type='interest', search_term=form3.search_term.data))
-        except BaseException as e:
-            form3.errors['database'] = str(e)
-            return render_template('searchpage.html')
-        '''
-        try:
-            return redirect(url_for('search-results',
-                                    dept=form.department_name.data,
-                                    interests=form.interests.data,
-                                    professor=form.professor_name.data))
-        except BaseException as e:
-            form.errors['database'] = str(e)
-            return render_template('searchpage.html')
-    return render_template('searchpage.html')
-    '''
-
-
-class SearchResult:
-    def __init__(self, netid, first_name, last_name, title, dept, interests):
-        self.netid = netid
-        self.first_name = first_name
-        self.last_name = last_name
-        self.title = title
-        self.dept = dept
-        self.interests = interests
-
-    def get_netid(self):
-        return self.netid
-
-    def get_last_name(self):
-        return self.last_name
-
-
-@app.route('/search-results', methods=['GET', 'POST'])
-def search_results(type, search_term):
-
-    matches = []
-    search_term = search_term.lower()
-
-    netid_set = set()
-    profs = db.session.query(models.Faculty).all()
-    for prof in profs:
-        netid_set.add(prof['netid'])
-
-    if type == 'prof':  # search by prof
-        profs = set()
-        users = db.session.query(models.People).filter(
-            models.People.last_name == search_term).all()
-        for user in users:
-            profs.add(user['netid'])
-        users = db.session.query(models.People).filter(
-            models.People.first_name == search_term).all()
-        for user in users:
-            profs.add(user['netid'])
-        for prof in profs:
-            if prof in netid_set:
-                user = db.session.query(models.People).filter(
-                    models.People.netid == prof).one()
-                dept = db.session.query(models.Member).filter(
-                    models.Member.netid == prof).one()
-                titles = db.session.query(models.Faculty).filter(
-                    models.Faculty.netid == prof).all()
-                fields = db.session.query(models.Interest).filter(
-                    models.Interest.netid == prof).all()
-                title = []
-                for t in titles:
-                    title.append(t['name'])
-                interests = []
-                count = 0
-                for field in fields:
-                    if count < 5:
-                        interests.append(field['field'])
-                        count = count + 1
-                matches.append(
-                    SearchResult(
-                        user['netid'],
-                        user['first_name'],
-                        user['last_name'],
-                        title,
-                        dept['name'],
-                        interests
-                    )
-                )
-        # sort results by alphabetical order
-        sorted_results = sorted(matches, key=SearchResult.get_last_name)
-    elif type == 'dept':  # search by dept
-        users_in_dept = db.session.query(models.Member).filter(
-            models.Member.name == search_term).all()
-        valid_profs = set()
-        for user in users_in_dept:
-            if user['netid'] in netid_set:
-                valid_profs.add(user['netid'])
-        for prof_netid in valid_profs:
-            user = db.session.query(models.People).filter(
-                models.People.netid == prof_netid).one()
-            titles = db.session.query(models.Faculty).filter(
-                models.Faculty.netid == prof_netid).all()
-            fields = db.session.query(models.Interest).filter(
-                models.Interest.netid == prof_netid).all()
-            title = []
-            for t in titles:
-                title.append(t['name'])
-            interests = []
-            count = 0
-            for field in fields:
-                if count < 5:
-                    interests.append(field['field'])
-                    count = count + 1
-            matches.append(
-                SearchResult(
-                    user['netid'],
-                    user['first_name'],
-                    user['last_name'],
-                    title,
-                    search_term,
-                    interests
-                )
-            )
-        sorted_results = sorted(matches, key=SearchResult.get_last_name)
-    elif type == 'interest':  # search by interests
-        users_in_interests = db.session.query(models.Interest).filter(
-            models.Interest.field == search_term).all()
-        valid_profs = set()
-        for user in users_in_dept:
-            if user['netid'] in netid_set:
-                valid_profs.add(user['netid'])
-        for prof_netid in valid_profs:
-            user = db.session.query(models.People).filter(
-                models.People.netid == prof_netid).one()
-            titles = db.session.query(models.Faculty).filter(
-                models.Faculty.netid == prof_netid).all()
-            dept = db.session.query(models.Member).filter(
-                models.Member.netid == prof.netid).one()
-            fields = db.session.query(models.Interest).filter(
-                models.Interest.netid == prof_netid).all()
-            title = []
-            for t in titles:
-                title.append(t['name'])
-            matches.append(
-                SearchResult(
-                    user['netid'],
-                    user['first_name'],
-                    user['last_name'],
-                    title,
-                    search_term,
-                    [search_term]
-                )
-            )
-        sorted_results = sorted(matches, key=SearchResult.get_last_name)
-    result = json.dumps([o.dump() for o in sorted_results])
-    return render_template('search_results.html', matches=result)
+    else:
+        return render_template('searchpage.html', form=form)
 
 
 if __name__ == '__main__':

@@ -3,19 +3,32 @@
 {% endblock %}
 {% block heading %}Search Results{% endblock %}
 {% block content %}
-   <body>
-   	{%for faculty in matches%}
-    <h3>{{faculty['firstname']} {faculty['lastname']}}</h3>
-      <ul>
-         <li> Title: faculty['title'] </li>
-         {% for dept in faculty['departments'] %}
-         <li> Department: dept
-         	{% end for %}
-         </li>
-         <li> Interests: faculty['interests'] </li>
+<body>
+    {%for user in matches%}
+    <ul>
+        <h3>{{user.firstname} {user.lastname}}</h3>
+        <ul>
+            <li> Title: {{user.title}} </li>
+
+            <li> Departments:
+                <ul>
+                    {% for dept in user.departments %}
+                    <li>{{dept.dept_id}}</li>
+                    {% end for %}
+                </ul>
+            </li>
+            <li> Interests:
+                <ul>
+                    {% for interest in user.interests %}
+                    <li>{{interest.field}}</li>
+                    {% end for %}
+                </ul>
+            </li>
+        </ul>
       </ul>
-      {% endfor %}
-   </body>
+   {%end for%}
+
+</body>
 
 {% endblock %}
 {% block jquery %}
