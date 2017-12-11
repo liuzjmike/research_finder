@@ -130,6 +130,8 @@ def edit_person(netid):
 
 @app.route('/profile/<netid>', methods=['GET', 'POST'])
 def profile(netid):
+    if netid==-1:
+        return redirect(url_for('login')) 
     user = db.session.query(models.People)\
         .filter(models.People.netid == netid).one()
     return render_template('profile.html', user=user)

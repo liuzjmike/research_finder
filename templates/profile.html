@@ -1,26 +1,46 @@
 {% extends 'layout.html' %}
-{% block heading %}User Profile: {{user.first_name}}{% endblock %}
+{% block heading %}<div class="container">
+<div class="page-hearder">Profile</div></div>{% endblock %}
 {% block content %}
-<p>First Name: {{user.first_name}}</p>
-<p>Last Name: {{user.last_name}}</p>
-<p>Email: {{user.email}}</p>
-<p>Website: {{user.website}}</p>
-<p>Resume: {{user.resume}}</p>
-<p>Interest(s):
-  <ul>
-    {% for interest in user.interests %}
-    <li>{{interest.field}}</li>
-    {% endfor %}
-  </ul>
-</p>
-<p>Department(s):
-  <ul>
-    {% for department in user.departments %}
-    <li>{{department.dept_id}}</li>
-    {% endfor %}
-  </ul>
-</p>
-<hr/>
-<p><a href="{{url_for('edit_person', netid=user.netid)}}">Edit</a>
-  this information.</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-14">
+    
+      <div class="panel panel-default">
+      <div class="panel-body">
+                  <div class="row">
+                        <div class="col-xs-12 col-sm-8">
+                            <h2>{{user.first_name}} {{user.last_name}}</h2>
+                            <p><strong>Email: </strong> {{user.email}} </p>
+                            <p><strong>Website: </strong> {{user.website}} </p>
+                            <p><strong>Resume: </strong> {{user.resume}}</p>
+                            <p><strong>Department(s): </strong>  
+                              <ul>
+                                {% for department in user.departments %}
+                                <li>{{department.dept_id}}</li>
+                                {% endfor %}
+                              </ul>                     
+                            </p>
+                            <p><strong>Interest(s): </strong>
+                                {% for interest in user.interests %}
+                                  <span class="label label-info tags">{{interest.field}}</span> 
+                                {% endfor %}
+                            </p>
+                        </div><!--/col-->          
+                        <div class="col-xs-12 col-sm-4 text-center">
+                                <img src="/static/img/empty-profile.png" alt="" class="center-block img-circle img-responsive">
+                        </div><!--/col-->
+
+                        <div class="col-xs-12 col-sm-4">
+                            <a class="btn btn-success btn-block" href="{{url_for('edit_person', netid=user.netid)}}"><span class="fa fa-plus-circle"></span> Edit </a>
+                        </div><!--/col-->
+
+                        </div><!--/col-->
+                  </div><!--/row-->
+              </div><!--/panel-body-->
+          </div><!--/panel-->
+    
+    </div>
+  </div>
+</div>
 {% endblock %}
