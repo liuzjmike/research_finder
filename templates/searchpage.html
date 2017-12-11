@@ -1,16 +1,10 @@
-<<<<<<< HEAD
-{% extends 'layout.html' %} {% block heading %}Search Page: {% endblock %} {% block content %}
-
-<body>
-=======
 {% extends 'layout.html' %}
 {% block css %}
 <link rel="stylesheet" href="/static/css/searchpage.css" type="text/css" media="screen"/>
 {% endblock %}
-{% block heading %}Search{% endblock %}
+{% block heading %}Search Page{% endblock %}
 {% block content %}
-    <body>
->>>>>>> 21b7eb7424369e5b47b3341e093f8dca5f25ab83
+<body>
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -21,7 +15,6 @@
                         <li role="presentation"><a href="#professor" aria-controls="Professor Search" role="tab" data-toggle="tab">Professor Search</a></li>
                         <li role="presentation"><a href="#interests" aria-controls="Interests Search" role="tab" data-toggle="tab">Interests Search</a></li>
                     </ul>
-
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="department">
@@ -71,4 +64,9 @@
             </div>
         </div>
 </body>
+{% endblock %}
+{% block jquery %}
+<script src="/static/js/searchprof.js"></script>
+<script src="/static/js/searchdept.js"></script>
+<script src="/static/js/search_interests.js"></script>
 {% endblock %}
