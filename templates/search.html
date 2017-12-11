@@ -10,63 +10,72 @@
 {% block heading %}Search{% endblock %}
 {% block content %}
 <center>
-  <form action="{{url_for('search')}}" method="POST">
-    {{form.csrf_token}}
-    <tr>
-      <td>
-        <strong>{{form.dept.label}}</strong>:  
-      </td>
-      <td>
-        {{form.dept}}
-        {% if form.dept.errors %}
-        <ul>
-          {% for error in form.dept.errors %}
-          <li>
-            {{error}}
-          </li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>{{form.name.label}}</strong>:  
-      </td>
-      <td>
-        {{form.name}}
-        {% if form.name.errors %}
-        <ul>
-          {% for error in form.name.errors %}
-          <li>
-            {{error}}
-          </li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>{{form.interest.label}}</strong>:  
-      </td>
-      <td>
-        {{form.interest}}
-        {% if form.interest.errors %}
-        <ul>
-          {% for error in form.interest.errors %}
-          <li>
-            {{error}}
-          </li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </td>
-    </tr>
-    <hr/>
-    <input type="reset" value="Reset"/>
-    <input type="submit" value="Submit"/>
-  </form>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-14">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form action="{{url_for('search')}}" method="POST">
+              {{form.csrf_token}}
+              <tr>
+                <td>
+                  <strong>{{form.dept.label}}</strong>:
+                </td>
+                <td>
+                  {{form.dept}} {% if form.dept.errors %}
+                  <ul>
+                    {% for error in form.dept.errors %}
+                    <li>
+                      {{error}}
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>{{form.name.label}}</strong>:
+                </td>
+                <td>
+                  {{form.name}} {% if form.name.errors %}
+                  <ul>
+                    {% for error in form.name.errors %}
+                    <li>
+                      {{error}}
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>{{form.interest.label}}</strong>:
+                </td>
+                <td>
+                  {{form.interest}} {% if form.interest.errors %}
+                  <ul>
+                    {% for error in form.interest.errors %}
+                    <li>
+                      {{error}}
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                </td>
+              </tr>
+              <hr/>
+              <input type="reset" value="Reset" />
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
+          <!--/panel-body-->
+        </div>
+        <!--/panel-->
+      </div>
+    </div>
+  </div>
 </center>
 {% endblock %}
 {% block jquery %}

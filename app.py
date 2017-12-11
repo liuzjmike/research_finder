@@ -8,6 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 import forms
 import models
 
+import sys
+
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
