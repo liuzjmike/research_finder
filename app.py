@@ -101,25 +101,24 @@ def edit_person(netid):
                 form.password.data
             )
 
-            interests = [x.strip() for x in form.interests.split(',')]
+            # TODO: Update interests
+            # models.Interest.edit(
+            #     netid,
+            #     form.get_interests()
+            # )
 
-            models.Interest.edit(
-                 netid,
-                 interests
-            )
-
-            if student:
-                models.Student.edit(
-                    netid,
-                    form.status.data,
-                    form.start_year.data
-                )
-            elif faculty:
-                models.Faculty.edit(
-                    netid,
-                    form.title.data,
-                    form.opening.data
-                )
+            # if student:
+            #     models.Student.edit(
+            #         netid,
+            #         form.status.data,
+            #         form.start_year.data
+            #     )
+            # elif faculty:
+            #     models.Faculty.edit(
+            #         netid,
+            #         form.title.data,
+            #         form.opening.data
+            #     )
             return redirect(url_for('profile', netid=netid))
         except BaseException as e:
             form.errors['database'] = str(e)
@@ -323,6 +322,6 @@ def search_results(type, search_term):
                 )
             )
         sorted_results = sorted(matches, key = SearchResult.get_last_name)
-    
+    json.dumps([o.dump() for o in sorted_results])
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
