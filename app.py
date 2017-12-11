@@ -107,18 +107,18 @@ def edit_person(netid):
             #     form.get_interests()
             # )
 
-            if student:
-                models.Student.edit(
-                    netid,
-                    form.status.data,
-                    form.start_year.data
-                )
-            elif faculty:
-                models.Faculty.edit(
-                    netid,
-                    form.title.data,
-                    form.opening.data
-                )
+            # if student:
+            #     models.Student.edit(
+            #         netid,
+            #         form.status.data,
+            #         form.start_year.data
+            #     )
+            # elif faculty:
+            #     models.Faculty.edit(
+            #         netid,
+            #         form.title.data,
+            #         form.opening.data
+            #     )
             return redirect(url_for('profile', netid=netid))
         except BaseException as e:
             form.errors['database'] = str(e)
