@@ -12,10 +12,10 @@
             <div class="col-xs-12 col-sm-8">
               <h2>{{user.first_name}} {{user.last_name}}</h2>
               <p>
-                <strong>Email: </strong> {{user.email}}
+                <strong>Email: </strong>{{user.email}}
               </p>
               <p>
-                <strong>Website: </strong> {{user.website}}
+                <strong>Website: </strong>{{user.website}}
               </p>
               <p><strong>Resume: </strong>
                 {% if user.resume %}
@@ -38,6 +38,22 @@
                 <span class="label label-info tags">{{interest.field}}</span>
                 {% endfor %}
               </p>
+              {% if student %}
+              <p>
+                <strong>Status: </strong>{{student.status}}
+              </p>
+              <p>
+                <strong>Start Year: </strong>{{student.start_year}}
+              </p>
+              {% endif %}
+              {% if faculty %}
+              <p>
+                <strong>Title: </strong>{{faculty.title}}
+              </p>
+              <p>
+                <strong>Opening: </strong>{{faculty.opening}}
+              </p>
+              {% endif %}
             </div>
             <!--/col-->
             <div class="col-xs-12 col-sm-4 text-center">

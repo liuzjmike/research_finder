@@ -97,7 +97,9 @@ def profile(netid):
         return redirect(url_for('login'))
     user = db.session.query(models.People) \
         .filter(models.People.netid == netid).one()
-    return render_template('profile.html', user=user)
+    return render_template('profile.html', user=user,
+                           faculty=models.Faculty.get(netid),
+                           student=models.Student.get(netid))
 
 
 @app.route('/resume/<netid>')
