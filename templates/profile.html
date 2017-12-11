@@ -19,7 +19,7 @@
               </p>
               <p><strong>Resume: </strong>
                 {% if user.resume %}
-                <a href="/resume/{{user.netid}}.pdf" target="_blank">View</a>
+                <a href="{{url_for('resume', netid=user.netid)}}" target="_blank">View</a>
                 {% else %}
                 None
                 {% endif %}

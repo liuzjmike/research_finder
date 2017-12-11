@@ -11,7 +11,7 @@
     <div class="col-md-14">
       <div class="panel panel-default">
         <div class="panel-body">
-        <form action="{{url_for('signup')}}" method="POST">
+        <form action="{{url_for('signup')}}" method="POST" enctype="multipart/form-data">
           {{form.csrf_token}}
           <p>
             {{form.netid.label}}: {{form.netid}}

@@ -1,8 +1,8 @@
 import itertools
-import json
 import os
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, \
+    send_from_directory, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 import forms
@@ -30,7 +30,7 @@ def signup():
             if form.resume.data:
                 resume_name = '%s.pdf' % form.netid.data
                 form.resume.data.save(os.path.join(
-                    app.instance_path, 'resume', resume_name))
+                    app.root_path, app.config['RESUME_FOLDER'], resume_name))
             else:
                 resume_name = None
             models.People.insert(
@@ -91,13 +91,20 @@ def login():
         return render_template('login.html', form=form)
 
 
-@app.route('/profile/<netid>', methods=['GET', 'POST'])
+@app.route('/profile/<netid>')
 def profile(netid):
     if netid == -1:
         return redirect(url_for('login'))
     user = db.session.query(models.People) \
         .filter(models.People.netid == netid).one()
     return render_template('profile.html', user=user)
+
+
+@app.route('/resume/<netid>')
+def resume(netid):
+    print(type(models.People.get(netid).resume))
+    return send_from_directory(os.path.join(
+        app.root_path, app.config['RESUME_FOLDER']), models.People.get(netid).resume)
 
 
 @app.route('/edit-profile/<netid>', methods=['GET', 'POST'])
@@ -117,7 +124,7 @@ def edit_profile(netid):
             if form.resume.data:
                 resume_name = '%s.pdf' % netid
                 form.resume.data.save(os.path.join(
-                    app.root_path, 'resume', resume_name))
+                    app.root_path, app.config['RESUME_FOLDER'], resume_name))
             else:
                 resume_name = None
             models.People.edit(
@@ -306,10 +313,10 @@ def search():
                 netid_set.remove(prof_netid)
 
             # sort the matches
-            sorted_results = sorted(matches, key=matches.last_name)
+            sorted_results = sorted(matches, key=lambda x: x.last_name)
             return render_template('search_results.html', matches=sorted_results)
         except BaseException as e:
-            form1.errors['database'] = str(e)
+            form.errors['database'] = str(e)
             return render_template('searchpage.html')
     else:
         return render_template('searchpage.html', form=form)
