@@ -128,7 +128,7 @@ def edit_profile(netid):
                 form.resume.data.save(os.path.join(
                     app.root_path, app.config['RESUME_FOLDER'], resume_name))
             else:
-                resume_name = None
+                resume_name = person.resume
             models.People.edit(
                 netid,
                 form.first_name.data,
