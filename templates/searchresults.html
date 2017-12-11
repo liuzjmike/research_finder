@@ -4,7 +4,7 @@
 {% block heading %}Search Results{% endblock %}
 {% block content %}
 <body>
-    {%for user in users%}
+    {%for user in matches%}
     <ul>
         <h3>{{user.firstname} {user.lastname}}</h3>
         <ul>
