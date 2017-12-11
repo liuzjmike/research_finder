@@ -58,6 +58,7 @@ class SignupForm(FlaskForm):
     department1 = StringField('Department 1', [data_required])
     department2 = StringField(
         'Department 2', [optional, validate_department2])
+    interests = TextAreaField('Interests')
     website = StringField('Website', [optional, URL()])
     resume = FileField('Resume')
     role = RadioField(
@@ -84,7 +85,8 @@ class LoginForm(FlaskForm):
 
 
 def ProfileForm(person, faculty=None, student=None):
-    int_fields = [interest.field for interest in person.interests]
+    departments = sorted([dept.dept_id for dept in person.departments])
+    int_fields = sorted([interest.field for interest in person.interests])
     if faculty:
         role_default = 'faculty'
     elif student:
@@ -93,18 +95,18 @@ def ProfileForm(person, faculty=None, student=None):
         role_default = None
 
     class F(FlaskForm):
-        netid = StringField('NetID', [data_required], default=person.netid)
         first_name = StringField(
             'First Name', [data_required], default=person.first_name)
         last_name = StringField(
             'Last Name', [data_required], default=person.last_name)
         email = StringField(
             'Email', [data_required, Email()], default=person.email)
-        # interests = TextAreaField('Interests', default=', '.join(int_fields))
-        interests = TextAreaField('Interests', default=', '.join(int_fields))
-        department1 = StringField('Department 1', [data_required], default=person.departments[0].dept_id)
+        department1 = StringField(
+            'Department 1', [data_required], default=departments[0])
         department2 = StringField(
-            'Department 2', [optional, validate_department2], default=person.departments[1].dept_id if len(person.departments)>1 else None)
+            'Department 2', [optional, validate_department2],
+            default=departments[1] if len(departments) > 1 else None)
+        interests = TextAreaField('Interests', default=', '.join(int_fields))
         website = StringField(
             'Website', [optional, URL()], default=person.website)
         resume = FileField('Resume', default=person.resume)
@@ -112,11 +114,23 @@ def ProfileForm(person, faculty=None, student=None):
                           choices=[('faculty', 'Faculty'),
                                    ('student', 'Student')],
                           default=role_default)
-        title = StringField('Title', [validate_title],
+        title = SelectField('Title', [validate_title],
+                            choices=[('N/A', '--'),
+                                     ('Professor', 'Professor'),
+                                     ('Associate Professor',
+                                      'Associate Professor'),
+                                     ('Assistant Professor',
+                                      'Assistant Professor'),
+                                     ('Lecturer', 'Lecturer')],
                             default=faculty.title if faculty else None)
         opening = IntegerField('Opening', [validate_opening],
                                default=faculty.opening if faculty else None)
-        status = StringField('Status', [validate_status],
+        status = SelectField("Academic Status", [validate_status],
+                             choices=[('N/A', '--'),
+                                      ('Undergraduate', 'Undergraduate'),
+                                      ('Master', 'Master'),
+                                      ('PhD', 'PhD'),
+                                      ('Post-Doc', 'Post-Doc')],
                              default=student.status if student else None)
         start_year = IntegerField('Start Year', [validate_start_year],
                                   default=student.start_year if student else None)

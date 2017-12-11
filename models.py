@@ -43,10 +43,10 @@ class People(db.Model):
         return user and user.password == password
 
     @classmethod
-    def edit(cls, old_netid, netid, first_name, last_name, email, website, resume, password):
+    def edit(cls, netid, first_name, last_name, email, website, resume, password):
         try:
-            cls.update().where(cls.netid == old_netid).\
-                values(netid=netid, first_name=first_name, last_name=last_name,
+            cls.update().where(cls.netid == netid).\
+                values(first_name=first_name, last_name=last_name,
                        email=email, website=website, resume=resume, password=password)
             db.session.commit()
         except Exception as e:

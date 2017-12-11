@@ -44,6 +44,10 @@ def signup():
                     form.netid.data,
                     form.department2.data
                 )
+            models.Interest.insert(
+                form.netid.data,
+                map(lambda s: s.strip(),
+                    form.interests.data.split(',')))
 
             if form.role.data == 'student':
                 models.Student.insert(
@@ -92,7 +96,6 @@ def edit_person(netid):
             form.errors.pop('database', None)
             models.People.edit(
                 netid,
-                form.netid.data,
                 form.first_name.data,
                 form.last_name.data,
                 form.email.data,
