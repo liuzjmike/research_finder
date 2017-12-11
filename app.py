@@ -298,102 +298,26 @@ def search_results(type, search_term):
             profs.add(user['netid'])
         for prof in profs:
             if prof in netid_set:
-                user = db.session.query(models.People).filter(
-                    models.People.netid == prof).one()
-                dept = db.session.query(models.Member).filter(
-                    models.Member.netid == prof).one()
-                titles = db.session.query(models.Faculty).filter(
-                    models.Faculty.netid == prof).all()
-                fields = db.session.query(models.Interest).filter(
-                    models.Interest.netid == prof).all()
-                title = []
-                for t in titles:
-                    title.append(t['name'])
-                interests = []
-                count = 0
-                for field in fields:
-                    if count < 5:
-                        interests.append(field['field'])
-                        count = count + 1
-                matches.append(
-                    SearchResult(
-                        user['netid'],
-                        user['first_name'],
-                        user['last_name'],
-                        title,
-                        dept['name'],
-                        interests
-                    )
-                )
-        # sort results by alphabetical order
-        sorted_results = sorted(matches, key=SearchResult.get_last_name)
-    elif type == 'dept':  # search by dept
-        users_in_dept = db.session.query(models.Member).filter(
-            models.Member.name == search_term).all()
+                matches.append(db.session.query(models.People).filter(models.People.netid == prof).one())
+    elif type == 'dept':# search by dept
+        users_in_dept = db.session.query(models.Member).filter(models.Member.name == search_term).all()
         valid_profs = set()
         for user in users_in_dept:
             if user['netid'] in netid_set:
                 valid_profs.add(user['netid'])
         for prof_netid in valid_profs:
-            user = db.session.query(models.People).filter(
-                models.People.netid == prof_netid).one()
-            titles = db.session.query(models.Faculty).filter(
-                models.Faculty.netid == prof_netid).all()
-            fields = db.session.query(models.Interest).filter(
-                models.Interest.netid == prof_netid).all()
-            title = []
-            for t in titles:
-                title.append(t['name'])
-            interests = []
-            count = 0
-            for field in fields:
-                if count < 5:
-                    interests.append(field['field'])
-                    count = count + 1
-            matches.append(
-                SearchResult(
-                    user['netid'],
-                    user['first_name'],
-                    user['last_name'],
-                    title,
-                    search_term,
-                    interests
-                )
-            )
-        sorted_results = sorted(matches, key=SearchResult.get_last_name)
-    elif type == 'interest':  # search by interests
-        users_in_interests = db.session.query(models.Interest).filter(
-            models.Interest.field == search_term).all()
+            user = db.session.query(models.People).filter(models.People.netid == prof_netid).one()
+            matches.append(user)
+    elif type == 'interest': # search by interests
+        users_in_interests = db.session.query(models.Interest).filter(models.Interest.field == search_term).all()
         valid_profs = set()
         for user in users_in_dept:
             if user['netid'] in netid_set:
                 valid_profs.add(user['netid'])
         for prof_netid in valid_profs:
-            user = db.session.query(models.People).filter(
-                models.People.netid == prof_netid).one()
-            titles = db.session.query(models.Faculty).filter(
-                models.Faculty.netid == prof_netid).all()
-            dept = db.session.query(models.Member).filter(
-                models.Member.netid == prof.netid).one()
-            fields = db.session.query(models.Interest).filter(
-                models.Interest.netid == prof_netid).all()
-            title = []
-            for t in titles:
-                title.append(t['name'])
-            matches.append(
-                SearchResult(
-                    user['netid'],
-                    user['first_name'],
-                    user['last_name'],
-                    title,
-                    search_term,
-                    [search_term]
-                )
-            )
-        sorted_results = sorted(matches, key=SearchResult.get_last_name)
-    result = json.dumps([o.dump() for o in sorted_results])
-    return render_template('search_results.html', matches=result)
-
-
+            user = db.session.query(models.People).filter(models.People.netid == prof_netid).one()
+            matches.append(user)
+    sorted_results = sorted(matches, key = matches.last_name)
+    return render_template('search_results.html', matches=sorted_results)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
