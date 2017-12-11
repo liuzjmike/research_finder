@@ -226,9 +226,6 @@ def search_interests():
     flattened = list(itertools.chain.from_iterable(results[0]))
     return flattened
 
-@app.route('/search_results', methods=['GET', 'POST'])
-def search_results():
-    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

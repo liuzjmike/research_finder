@@ -100,6 +100,9 @@
   <input type="submit" value="Submit"/>
   {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
 </form>
+<p>
+  <a href="{{url_for('login')}}">Already have an account?</a>
+</p>
 {% endblock %}
 {% block jquery %}
 <script src="/static/js/signup.js"></script>
