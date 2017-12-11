@@ -1,10 +1,9 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
-from wtforms import IntegerField, PasswordField, RadioField, \
-    SelectField, StringField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, \
-    Optional, URL, ValidationError
-
+from flask_wtf.file import FileAllowed, FileField
+from wtforms import (IntegerField, PasswordField, RadioField, SelectField,
+                     StringField, TextAreaField)
+from wtforms.validators import (URL, DataRequired, Email, EqualTo, Optional,
+                                ValidationError)
 
 data_required = DataRequired()
 optional = Optional()
@@ -102,15 +101,16 @@ def ProfileForm(person, faculty=None, student=None):
         email = StringField(
             'Email', [data_required, Email()], default=person.email)
         interests = TextAreaField('Interests', default=', '.join(int_fields))
-        department1 = StringField('Department 1', [data_required], default=person.departments[0].dept_id if len(person.departments)>0 else None)
+        department1 = StringField('Department 1',
+                                  [data_required],
+                                  default=departments[0] if person.departments else None)
         department2 = StringField(
             'Department 2', [optional, validate_department2],
             default=departments[1] if len(departments) > 1 else None)
         interests = TextAreaField('Interests', default=', '.join(int_fields))
         website = StringField(
             'Website', [optional, URL()], default=person.website)
-        resume = FileField(
-            'Resume', [FileAllowed(['pdf'])], default=person.resume)
+        resume = FileField('Resume', [FileAllowed(['pdf'])])
         role = RadioField('Role', [data_required],
                           choices=[('faculty', 'Faculty'),
                                    ('student', 'Student')],
