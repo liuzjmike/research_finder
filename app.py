@@ -9,6 +9,8 @@ from flask_sqlalchemy import SQLAlchemy
 import forms
 import models
 
+import sys
+
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
@@ -272,61 +274,68 @@ def search():
             dept = form.dept.data
             interests = form.interests.data
 
+            name = name.lower()
+            dept = dept.lower()
+            interests = interests.lower()
+
+            print('abc', file=sys.stderr)
+
             netid_set = set()
-            profs = db.session.query(models.Faculty).all()
-            for prof in profs:
-                netid_set.add(prof['netid'])
+            professors = db.session.query(models.Faculty).all()
+            for prof in professors:
+                netid_set.add(prof.netid)
 
             # search by prof
             profs = set()
             users = db.session.query(models.People).filter(
                 models.People.last_name == name).all()
             for user in users:
-                profs.add(user['netid'])
-            users = db.session.query(models.People).filter(
-                models.People.first_name == name).all()
-            for user in users:
-                profs.add(user['netid'])
+                profs.add(user.netid)
             for prof in profs:
                 if prof in netid_set:
                     matches.append(db.session.query(models.People).filter(
-                        models.People.netid == prof).one())
+                        models.People.netid == prof))
                     netid_set.remove(prof)
 
             # search by dept
             dept_id = db.session.query(models.Department.id).filter(
-                models.Department.name == dept).one()
+                models.Department.id == dept)
             users_in_dept = db.session.query(models.Member).filter(
                 models.Member.dept_id == dept_id).all()
             valid_profs = set()
             for user in users_in_dept:
-                if user['netid'] in netid_set:
-                    valid_profs.add(user['netid'])
+                if user.netid in netid_set:
+                    valid_profs.add(user.netid)
             for prof_netid in valid_profs:
-                user = db.session.query(models.People).filter(
-                    models.People.netid == prof_netid).one()
-                matches.append(user)
+                matches.append(db.session.query(models.People).filter(
+                    models.People.netid == prof_netid))
                 netid_set.remove(prof_netid)
 
             # search by interests
             users_in_interests = db.session.query(models.Interest).filter(
                 models.Interest.field == interests).all()
-            valid_profs = set()
+            valid_profs1 = set()
             for user in users_in_interests:
-                if user['netid'] in netid_set:
-                    valid_profs.add(user['netid'])
-            for prof_netid in valid_profs:
-                user = db.session.query(models.People).filter(
-                    models.People.netid == prof_netid).one()
-                matches.append(user)
+                if user.netid in netid_set:
+                    valid_profs1.add(user.netid)
+            for prof_netid in valid_profs1:
+                matches.append(db.session.query(models.People).filter(
+                    models.People.netid == prof_netid))
                 netid_set.remove(prof_netid)
 
             # sort the matches
             sorted_results = sorted(matches, key=lambda x: x.last_name)
+<<<<<<< Updated upstream
             return render_template('search_results.html', matches=sorted_results)
         except BaseException as e:
             form.errors['database'] = str(e)
             return render_template('searchpage.html')
+=======
+            return render_template('searchresults.html', user=sorted_results)
+        except BaseException as e:
+            form.errors['database'] = str(e)
+            return render_template('searchpage.html', form=form)
+>>>>>>> Stashed changes
     else:
         return render_template('searchpage.html', form=form)
 

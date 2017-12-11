@@ -1,9 +1,7 @@
-{% extends 'layout.html' %} 
-{% block heading %}
-<div class="container">
-  <div class="page-hearder">Search</div>
-</div>
-{% endblock %} 
+{% extends 'layout.html' %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/searchpage.css" type="text/css" media="screen" /> {% endblock %}
+ {% block heading %}Search Page{% endblock %}
  {% block content %}
 <style>
     .nav {
@@ -16,58 +14,36 @@
     <div class="col-md-14">
       <div class="panel panel-default">
         <div class="panel-body">
-
-            <div id="department">
-                <center>
-                    <form method="get" action="/search" id="Department Search">
-                        <input name="q" type="text" size="40" placeholder="Department Search" />
-                        <!-- <div id="suggesstion-box-dept"></div> -->
-                        <center>
-                            <!-- <button type="search" class="custombtn">
-                                <img src="../static/img/search3.png" alt="search" />
-                            </button> -->
-                        </center>
-
-                    </form>
-                </center>
-            </div>
-            <div id="professor">
-                <center>
-                    <form method="get" action="/search" id="Professor Search">
-                        <input name="q" type="text" size="40" placeholder="Professor Search" />
-                        <!-- <div id="suggesstion-box-prof"></div> -->
-                        <center>
-                            <!-- <button type="search" class="custombtn">
-                                <img src="../static/img/search3.png" alt="search" />
-                            </button> -->
-                        </center>
-
-                    </form>
-                </center>
-            </div>
-            <div id="interests">
-                <center>
-                    <form method="get" action="/search" id="Interests Search">
-                        <input name="q" type="text" size="40" placeholder="Interests Search" />
-                        <!-- <div id="suggesstion-box-interests"></div> -->
-                    </form>
-                </center>
-
-            </div>
-            </br>
-            <center>
-                <button type="search" class="custombtn">
-                 <img src="../static/img/search3.png" alt="search" />
-                </button>
-            </center>
-      </div>
-      <!--/panel-body-->
+          <form action="{{url_for('search')}}" method="POST">
+            {{form.csrf_token}}
+            <p>
+              {{form.dept.label}}: {{form.dept}}
+              {% if form.dept.errors %}
+              <ul>{% for error in form.dept.errors %}<li>{{error}}</li>{% endfor %}</ul>
+              {% endif %}
+            </p>
+            <p>
+              {{form.name.label}}: {{form.name}}
+              {% if form.name.errors %}
+              <ul>{% for error in form.name.errors %}<li>{{error}}</li>{% endfor %}</ul>
+              {% endif %}
+            </p>
+            <p>
+              {{form.interests.label}}: {{form.interests}}
+              {% if form.interests.errors %}
+              <ul>{% for error in form.name.errors %}<li>{{error}}</li>{% endfor %}</ul>
+              {% endif %}
+            </p>
+            <hr/>
+            <input type="submit" value="Submit"/>
+            {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
+          </form>
+        </div><!--/panel-body-->
+      </div><!--/panel-->
     </div>
-    <!--/panel-->
   </div>
 </div>
-</div>
-{% endblock %} 
+{% endblock %}
 {% block jquery %}
 <!-- <script src="/static/js/searchprof.js"></script>
 <script src="/static/js/searchdept.js"></script>
