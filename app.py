@@ -268,7 +268,7 @@ def search_results(type, search_term):
     netid_set = set()
     profs = db.session.query(models.Faculty).all()
     for prof in profs:
-    netid_set.add(prof['netid'])
+        netid_set.add(prof['netid'])
 
     if type == 'prof':# search by prof
         profs = set()
