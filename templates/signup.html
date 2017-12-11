@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block css %}
-<link rel="stylesheet" href="/static/css/signup.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="/static/css/user_info.css" type="text/css" media="screen"/>
 {% endblock %}
 {% block heading %}Sign Up!{% endblock %}
 {% block content %}
@@ -55,6 +55,12 @@
     {% endif %}
   </p>
   <p>
+    {{form.interests.label}}: {{form.interests}}
+    {% if form.interests.errors %}
+    <ul>{% for error in form.interests.errors %}<li>{{error}}</li>{% endfor %}</ul>
+    {% endif %}
+  </p>
+  <p>
     {{form.website.label}}: {{form.website}}
     {% if form.website.errors %}
     <ul>{% for error in form.website.errors %}<li>{{error}}</li>{% endfor %}</ul>
@@ -105,5 +111,5 @@
 </p>
 {% endblock %}
 {% block jquery %}
-<script src="/static/js/signup.js"></script>
+<script src="/static/js/user_info.js"></script>
 {% endblock %}

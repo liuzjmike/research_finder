@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 {% block heading %}<div class="container">
-<div class="page-hearder">Profile</div></div>{% endblock %}
+<div class="page-hearder">Profile</div></div>
+{% endblock %}
 {% block content %}
 <div class="container">
   <div class="row">
@@ -16,13 +17,13 @@
                             <p><strong>Resume: </strong> {{user.resume}}</p>
                             <p><strong>Department(s): </strong>  
                               <ul>
-                                {% for department in user.departments %}
+                                {% for department in user.departments|sort(attribute='dept_id') %}
                                 <li>{{department.dept_id}}</li>
                                 {% endfor %}
                               </ul>                     
                             </p>
                             <p><strong>Interest(s): </strong>
-                                {% for interest in user.interests %}
+                                {% for interest in user.interests|sort(attribute='field') %}
                                   <span class="label label-info tags">{{interest.field}}</span> 
                                 {% endfor %}
                             </p>

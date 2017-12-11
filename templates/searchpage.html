@@ -1,72 +1,63 @@
-{% extends 'layout.html' %}
+{% extends 'layout.html' %} 
 {% block css %}
-<link rel="stylesheet" href="/static/css/searchpage.css" type="text/css" media="screen"/>
-{% endblock %}
-{% block heading %}Search Page{% endblock %}
-{% block content %}
+<link rel="stylesheet" href="/static/css/searchpage.css" type="text/css" media="screen" /> {% endblock %}
+ {% block heading %}Search Page{% endblock %} 
+ {% block content %}
+<style>
+    .nav {
+        opacity: 70%;
+    }
+</style>
+
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <!-- Nav tabs -->
-                <div class="card">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#department" aria-controls="Department Search" role="tab" data-toggle="tab">Department Search</a></li>
-                        <li role="presentation"><a href="#professor" aria-controls="Professor Search" role="tab" data-toggle="tab">Professor Search</a></li>
-                        <li role="presentation"><a href="#interests" aria-controls="Interests Search" role="tab" data-toggle="tab">Interests Search</a></li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="department">
-                            <center>
-                                <form method="get" action="/search" id="Department Search">
-                                    <input name="q" type="text" size="40" placeholder="Department Search" />
 
-                                    <center>
-                                        <button type="search" class="custombtn">
-                                            <img src="../static/img/search3.png" alt="search" />
-                                        </button>
-                                    </center>
+    <div id="department">
+        <center>
+            <form method="get" action="/search" id="Department Search">
+                <input name="q" type="text" size="40" placeholder="Department Search" />
+                <!-- <div id="suggesstion-box-dept"></div> -->
+                <center>
+                    <!-- <button type="search" class="custombtn">
+                        <img src="../static/img/search3.png" alt="search" />
+                    </button> -->
+                </center>
 
-                                </form>
-                            </center>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="professor">
-                            <center>
-                                <form method="get" action="/search" id="Professor Search">
-                                    <input name="q" type="text" size="40" placeholder="Professor Search" />
+            </form>
+        </center>
+    </div>
+    <div id="professor">
+        <center>
+            <form method="get" action="/search" id="Professor Search">
+                <input name="q" type="text" size="40" placeholder="Professor Search" />
+                <!-- <div id="suggesstion-box-prof"></div> -->
+                <center>
+                    <!-- <button type="search" class="custombtn">
+                        <img src="../static/img/search3.png" alt="search" />
+                    </button> -->
+                </center>
 
-                                    <center>
-                                        <button type="search" class="custombtn">
-                                            <img src="../static/img/search3.png" alt="search" />
-                                        </button>
-                                    </center>
+            </form>
+        </center>
+    </div>
+    <div id="interests">
+        <center>
+            <form method="get" action="/search" id="Interests Search">
+                <input name="q" type="text" size="40" placeholder="Interests Search" />
+                <!-- <div id="suggesstion-box-interests"></div> -->
+                <center>
+                    <button type="search" class="custombtn">
+                        <img src="../static/img/search3.png" alt="search" />
+                    </button>
+                </center>
 
-                                </form>
-                            </center>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="interests">
-                            <center>
-                                <form method="get" action="/search" id="Interests Search">
-                                    <input name="q" type="text" size="40" placeholder="Interests Search" />
+            </form>
+        </center>
 
-                                    <center>
-                                        <button type="search" class="custombtn">
-                                            <img src="../static/img/search3.png" alt="search" />
-                                        </button>
-                                    </center>
-
-                                </form>
-                            </center>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 </body>
-{% endblock %}
+{% endblock %} 
 {% block jquery %}
-<script src="/static/js/searchprof.js"></script>
+<!-- <script src="/static/js/searchprof.js"></script>
 <script src="/static/js/searchdept.js"></script>
-<script src="/static/js/search_interests.js"></script>
+<script src="/static/js/search_interests.js"></script> -->
 {% endblock %}

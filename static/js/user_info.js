@@ -1,4 +1,4 @@
-$("#role input[type=radio]").click(function (e) {
+function show_role_specific_content() {
     let val = $("#role input[type=radio]:checked").val();
     if (val == "faculty") {
         $(".student").hide();
@@ -10,4 +10,9 @@ $("#role input[type=radio]").click(function (e) {
         $(".faculty").hide();
         $(".student").hide();
     }
+}
+
+$(show_role_specific_content);
+$("#role input[type=radio]").click(function(e) {
+    show_role_specific_content()
 });
