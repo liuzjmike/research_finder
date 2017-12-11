@@ -10,7 +10,7 @@
     <div class="col-md-14">
       <div class="panel panel-default">
         <div class="panel-body">
-          <form action="{{url_for('edit_person', netid=user.netid)}}" method="POST">
+          <form action="{{url_for('edit_profile', netid=user.netid)}}" method="POST">
             {{form.csrf_token}}
             <table>
               <tr>

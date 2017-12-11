@@ -91,6 +91,15 @@ def login():
         return render_template('login.html', form=form)
 
 
+@app.route('/profile/<netid>', methods=['GET', 'POST'])
+def profile(netid):
+    if netid == -1:
+        return redirect(url_for('login'))
+    user = db.session.query(models.People) \
+        .filter(models.People.netid == netid).one()
+    return render_template('profile.html', user=user)
+
+
 @app.route('/edit-profile/<netid>', methods=['GET', 'POST'])
 def edit_profile(netid):
     person = db.session.query(models.People)\
@@ -157,13 +166,6 @@ def edit_profile(netid):
             return render_template('edit-profile.html', user=person, form=form)
     else:
         return render_template('edit-profile.html', user=person, form=form)
-
-
-@app.route('/profile/<netid>', methods=['GET', 'POST'])
-def profile(netid):
-    user = db.session.query(models.People)\
-        .filter(models.People.netid == netid).one()
-    return render_template('profile.html', user=user)
 
 
 @app.route('/search-prof/<term>', methods=['GET', 'POST'])
