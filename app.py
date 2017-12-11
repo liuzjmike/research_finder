@@ -173,7 +173,7 @@ def search_prof():
             results_temp.append(prof['first_name'] + prof['last_name'])
             prof_netid.remove(prof['netid'])
 
-    for i in min(range(5), len(results_temp)):
+    for i in range(min(5, len(results_temp))):
         results.append(results_temp[i])
     flattened = list(itertools.chain.from_iterable(results[0]))
     return flattened
@@ -197,7 +197,7 @@ def search_dept():
             results_temp.append(dept['name'])
             dept_name.remove(dept['name'])
 
-    for i in min(range(5), len(results_temp)):
+    for i in range(min(5, len(results_temp))):
         results.append(results_temp[i])
     flattened = list(itertools.chain.from_iterable(results[0]))
     return flattened
@@ -221,11 +221,14 @@ def search_interests():
             results_temp.append(interest['field'])
             field.remove(interest['field'])
 
-    for i in min(range(5), len(results_temp)):
+    for i in range(min(5, len(results_temp))):
         results.append(results_temp[i])
     flattened = list(itertools.chain.from_iterable(results[0]))
     return flattened
 
+@app.route('/search_results', methods=['GET', 'POST'])
+def search_results():
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

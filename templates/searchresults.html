@@ -2,9 +2,8 @@
 {% block heading %}Search Results{% endblock %}
 {% block content %}
    <BODY>
-   	{%for faculty in results%}
+   	{%for faculty in users%}
     <h3>{{faculty.firstname} {faculty.lastname}}</h3>
-    {% endfor %}
       <UL>
          <LI> Title: faculty.title
          {% for dept in faculty.departments %}
@@ -12,6 +11,7 @@
          	{% end for %}
          <LI> Interests: faculty.interests
       </UL>
+      {% endfor %}
    </BODY>
 
 {% endblock %}
