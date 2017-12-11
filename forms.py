@@ -102,10 +102,9 @@ def ProfileForm(person, faculty=None, student=None):
             'Email', [data_required, Email()], default=person.email)
         # interests = TextAreaField('Interests', default=', '.join(int_fields))
         interests = TextAreaField('Interests', default=', '.join(int_fields))
-        # TODO: Set default for departments
-        department1 = StringField('Department 1', [data_required])
+        department1 = StringField('Department 1', [data_required], default=person.departments[0].dept_id)
         department2 = StringField(
-            'Department 2', [optional, validate_department2])
+            'Department 2', [optional, validate_department2], default=person.departments[1].dept_id if len(person.departments)>1 else None)
         website = StringField(
             'Website', [optional, URL()], default=person.website)
         resume = FileField('Resume', default=person.resume)
