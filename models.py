@@ -182,7 +182,7 @@ class Interest(db.Model):
     def insert(cls, netid, interests):
         if interests:
             try:
-                db.session.add_all([cls(netid=netid, interest=interest)
+                db.session.add_all([cls(netid=netid, field=interest)
                                     for interest in interests])
                 db.session.commit()
             except Exception as e:
