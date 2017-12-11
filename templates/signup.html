@@ -4,7 +4,7 @@
 {% endblock %}
 {% block heading %}Sign Up!{% endblock %}
 {% block content %}
-<form action="{{url_for('signup')}}" method="POST">
+<form action="{{url_for('signup')}}" method="POST" enctype="multipart/form-data">
   {{form.csrf_token}}
   <p>
     {{form.netid.label}}: {{form.netid}}

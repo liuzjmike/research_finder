@@ -1,5 +1,6 @@
 import itertools
 import json
+import os
 
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -23,18 +24,22 @@ def signup():
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
-
             if models.People.contains(form.netid.data):
                 form.netid.errors.append("User already exists.")
                 return render_template('signup.html', form=form)
-
+            if form.resume.data:
+                resume_name = '%s.pdf' % form.netid.data
+                form.resume.data.save(os.path.join(
+                    app.instance_path, 'resume', resume_name))
+            else:
+                resume_name = None
             models.People.insert(
                 form.netid.data,
                 form.first_name.data,
                 form.last_name.data,
                 form.email.data,
                 form.website.data,
-                form.resume.data,
+                resume_name,
                 form.password.data)
             models.Member.insert(
                 form.netid.data,
@@ -86,8 +91,15 @@ def login():
         return render_template('login.html', form=form)
 
 
-@app.route('/edit-person/<netid>', methods=['GET', 'POST'])
-def edit_person(netid):
+@app.route('/profile/<netid>', methods=['GET', 'POST'])
+def profile(netid):
+    user = db.session.query(models.People)\
+        .filter(models.People.netid == netid).one()
+    return render_template('profile.html', user=user)
+
+
+@app.route('/edit-profile/<netid>', methods=['GET', 'POST'])
+def edit_profile(netid):
     person = db.session.query(models.People)\
         .filter(models.People.netid == netid).one()
     student = models.Student.get(netid)
@@ -100,15 +112,31 @@ def edit_person(netid):
     if form.validate_on_submit():
         try:
             form.errors.pop('database', None)
+            if form.resume.data:
+                resume_name = '%s.pdf' % netid
+                form.resume.data.save(os.path.join(
+                    app.root_path, 'resume', resume_name))
+            else:
+                resume_name = None
             models.People.edit(
                 netid,
                 form.first_name.data,
                 form.last_name.data,
                 form.email.data,
                 form.website.data,
-                form.resume.data,
+                resume_name,
                 person.password
             )
+            models.Member.query.filter_by(netid=netid).delete()
+            models.Member.insert(
+                netid,
+                form.department1.data
+            )
+            if form.department2.data:
+                models.Member.insert(
+                    netid,
+                    form.department2.data
+                )
             interests = []
             for interest in form.interests.data.split(','):
                 interest = interest.strip()
@@ -136,13 +164,6 @@ def edit_person(netid):
             return render_template('edit-profile.html', user=person, form=form)
     else:
         return render_template('edit-profile.html', user=person, form=form)
-
-
-@app.route('/profile/<netid>', methods=['GET', 'POST'])
-def profile(netid):
-    user = db.session.query(models.People)\
-        .filter(models.People.netid == netid).one()
-    return render_template('profile.html', user=user)
 
 
 @app.route('/search-prof/<term>', methods=['GET', 'POST'])

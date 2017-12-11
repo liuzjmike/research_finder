@@ -4,7 +4,7 @@
 {% endblock %}
 {% block heading %}Edit Profile: {{user.first_name}} {{user.last_name}}{% endblock %}
 {% block content %}
-<form action="{{url_for('edit_person', netid=user.netid)}}" method="POST">
+<form action="{{url_for('edit_profile', netid=user.netid)}}" method="POST" enctype="multipart/form-data">
   {{form.csrf_token}}
 <p>
     {{form.first_name.label}}: {{form.first_name}}
