@@ -223,7 +223,7 @@ def search_interests():
     return flattened
 
 
-@app.route('/search')
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     form = forms.SearchForm()
     if form.validate_on_submit():
@@ -254,7 +254,8 @@ def search():
                     netid_set.remove(prof)
 
             # search by dept
-            users_in_dept = db.session.query(models.Member).filter(models.Member.name == dept).all()
+            dept_id = db.session.query(models.Department.id).filter(models.Department.name == dept).one()
+            users_in_dept = db.session.query(models.Member).filter(models.Member.dept_id == dept_id).all()
             valid_profs = set()
             for user in users_in_dept:
                 if user['netid'] in netid_set:
@@ -267,7 +268,7 @@ def search():
             # search by interests
             users_in_interests = db.session.query(models.Interest).filter(models.Interest.field == interests).all()
             valid_profs = set()
-            for user in users_in_dept:
+            for user in users_in_interests:
                 if user['netid'] in netid_set:
                     valid_profs.add(user['netid'])
             for prof_netid in valid_profs:
