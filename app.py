@@ -44,10 +44,15 @@ def signup():
                     form.netid.data,
                     form.department2.data
                 )
-            models.Interest.insert(
-                form.netid.data,
-                map(lambda s: s.strip(),
-                    form.interests.data.split(',')))
+            interests = []
+            for interest in form.interests.data.split(','):
+                interest = interest.strip()
+                if interest:
+                    interests.append(interest)
+            if interests:
+                models.Interest.insert(
+                    form.netid.data,
+                    interests)
 
             if form.role.data == 'student':
                 models.Student.insert(
@@ -101,27 +106,29 @@ def edit_person(netid):
                 form.email.data,
                 form.website.data,
                 form.resume.data,
-                form.password.data
+                person.password
             )
+            interests = []
+            for interest in form.interests.data.split(','):
+                interest = interest.strip()
+                if interest:
+                    interests.append(interest)
+            models.Interest.edit(
+                netid,
+                interests)
 
-            # TODO: Update interests
-            # models.Interest.edit(
-            #     netid,
-            #     form.get_interests()
-            # )
-
-            # if student:
-            #     models.Student.edit(
-            #         netid,
-            #         form.status.data,
-            #         form.start_year.data
-            #     )
-            # elif faculty:
-            #     models.Faculty.edit(
-            #         netid,
-            #         form.title.data,
-            #         form.opening.data
-            #     )
+            if student:
+                models.Student.edit(
+                    netid,
+                    form.status.data,
+                    form.start_year.data
+                )
+            elif faculty:
+                models.Faculty.edit(
+                    netid,
+                    form.title.data,
+                    form.opening.data
+                )
             return redirect(url_for('profile', netid=netid))
         except BaseException as e:
             form.errors['database'] = str(e)
