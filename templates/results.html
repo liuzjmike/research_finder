@@ -10,7 +10,6 @@
         <div class="panel-body">
             <ul>
             {% for user in matches %}
-            <li>
                 <h3><a href="{{url_for('profile', netid=user.netid)}}">{{user.first_name}} {{user.last_name}}</a></h3>
                 <ul>
                     <li> Departments:
@@ -30,7 +29,6 @@
                         </ul>
                     </li>
                 </ul>
-              </li>
               {% endfor %}
             </ul>
           </div>
