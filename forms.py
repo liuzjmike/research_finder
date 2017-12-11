@@ -138,4 +138,6 @@ def ProfileForm(person, faculty=None, student=None):
 
 
 class SearchForm(FlaskForm):
-    search_term = StringField('Search')
+    name = StringField('Name')
+    dept = StringField('Department')
+    interests = StringField('Interests')
