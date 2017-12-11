@@ -1,3 +1,4 @@
+import errno
 import itertools
 import os
 
@@ -11,6 +12,12 @@ import models
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
+try:
+    os.makedirs(os.path.join(
+        app.root_path, app.config['RESUME_FOLDER']))
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
 
 
 @app.route('/')
