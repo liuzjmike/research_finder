@@ -281,6 +281,8 @@ def search():
         except BaseException as e:
             form1.errors['database'] = str(e)
             return render_template('searchpage.html')
+    else:
+        return render_template('searchpage.html', form=form)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
