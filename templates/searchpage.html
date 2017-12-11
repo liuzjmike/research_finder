@@ -4,6 +4,12 @@
 {% endblock %}
 {% block heading %}Search Page{% endblock %}
 {% block content %}
+<style>
+     .nav{
+            opacity: 70%;
+        }
+
+</style>
 <body>
     <div class="container">
         <div class="row">
@@ -21,7 +27,7 @@
                             <center>
                                 <form method="get" action="/search" id="Department Search">
                                     <input name="q" type="text" size="40" placeholder="Department Search" />
-
+                                    <div id="suggesstion-box-dept"></div>
                                     <center>
                                         <button type="search" class="custombtn">
                                             <img src="../static/img/search3.png" alt="search" />
@@ -35,7 +41,7 @@
                             <center>
                                 <form method="get" action="/search" id="Professor Search">
                                     <input name="q" type="text" size="40" placeholder="Professor Search" />
-
+                                    <div id="suggesstion-box-prof"></div>
                                     <center>
                                         <button type="search" class="custombtn">
                                             <img src="../static/img/search3.png" alt="search" />
@@ -49,7 +55,7 @@
                             <center>
                                 <form method="get" action="/search" id="Interests Search">
                                     <input name="q" type="text" size="40" placeholder="Interests Search" />
-
+                                    <div id="suggesstion-box-interests"></div>
                                     <center>
                                         <button type="search" class="custombtn">
                                             <img src="../static/img/search3.png" alt="search" />
