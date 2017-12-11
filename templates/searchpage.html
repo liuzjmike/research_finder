@@ -1,7 +1,9 @@
 {% extends 'layout.html' %} 
-{% block css %}
-<link rel="stylesheet" href="/static/css/searchpage.css" type="text/css" media="screen" /> {% endblock %}
- {% block heading %}Search Page{% endblock %} 
+{% block heading %}
+<div class="container">
+  <div class="page-hearder">Search</div>
+</div>
+{% endblock %} 
  {% block content %}
 <style>
     .nav {
@@ -9,52 +11,62 @@
     }
 </style>
 
-<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-14">
+      <div class="panel panel-default">
+        <div class="panel-body">
 
-    <div id="department">
-        <center>
-            <form method="get" action="/search" id="Department Search">
-                <input name="q" type="text" size="40" placeholder="Department Search" />
-                <!-- <div id="suggesstion-box-dept"></div> -->
+            <div id="department">
                 <center>
-                    <!-- <button type="search" class="custombtn">
-                        <img src="../static/img/search3.png" alt="search" />
-                    </button> -->
+                    <form method="get" action="/search" id="Department Search">
+                        <input name="q" type="text" size="40" placeholder="Department Search" />
+                        <!-- <div id="suggesstion-box-dept"></div> -->
+                        <center>
+                            <!-- <button type="search" class="custombtn">
+                                <img src="../static/img/search3.png" alt="search" />
+                            </button> -->
+                        </center>
+
+                    </form>
+                </center>
+            </div>
+            <div id="professor">
+                <center>
+                    <form method="get" action="/search" id="Professor Search">
+                        <input name="q" type="text" size="40" placeholder="Professor Search" />
+                        <!-- <div id="suggesstion-box-prof"></div> -->
+                        <center>
+                            <!-- <button type="search" class="custombtn">
+                                <img src="../static/img/search3.png" alt="search" />
+                            </button> -->
+                        </center>
+
+                    </form>
+                </center>
+            </div>
+            <div id="interests">
+                <center>
+                    <form method="get" action="/search" id="Interests Search">
+                        <input name="q" type="text" size="40" placeholder="Interests Search" />
+                        <!-- <div id="suggesstion-box-interests"></div> -->
+                    </form>
                 </center>
 
-            </form>
-        </center>
+            </div>
+            </br>
+            <center>
+                <button type="search" class="custombtn">
+                 <img src="../static/img/search3.png" alt="search" />
+                </button>
+            </center>
+      </div>
+      <!--/panel-body-->
     </div>
-    <div id="professor">
-        <center>
-            <form method="get" action="/search" id="Professor Search">
-                <input name="q" type="text" size="40" placeholder="Professor Search" />
-                <!-- <div id="suggesstion-box-prof"></div> -->
-                <center>
-                    <!-- <button type="search" class="custombtn">
-                        <img src="../static/img/search3.png" alt="search" />
-                    </button> -->
-                </center>
-
-            </form>
-        </center>
-    </div>
-    <div id="interests">
-        <center>
-            <form method="get" action="/search" id="Interests Search">
-                <input name="q" type="text" size="40" placeholder="Interests Search" />
-                <!-- <div id="suggesstion-box-interests"></div> -->
-                <center>
-                    <button type="search" class="custombtn">
-                        <img src="../static/img/search3.png" alt="search" />
-                    </button>
-                </center>
-
-            </form>
-        </center>
-
-    </div>
-</body>
+    <!--/panel-->
+  </div>
+</div>
+</div>
 {% endblock %} 
 {% block jquery %}
 <!-- <script src="/static/js/searchprof.js"></script>
