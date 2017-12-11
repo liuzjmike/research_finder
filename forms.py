@@ -98,6 +98,10 @@ def ProfileForm(person, faculty=None, student=None):
             'First Name', [data_required], default=person.first_name)
         last_name = StringField(
             'Last Name', [data_required], default=person.last_name)
+        password = PasswordField('Password', [data_required])
+        confirm = PasswordField(
+        'Confirm Password', [data_required,
+                             EqualTo('password', message='Passwords must match')])
         email = StringField(
             'Email', [data_required, Email()], default=person.email)
         interests = TextAreaField('Interests', default=', '.join(int_fields))
