@@ -75,6 +75,7 @@ class Faculty(db.Model):
                       nullable=False)
     opening = db.Column('opening', db.Integer, nullable=False)
     db.CheckConstraint('opening >= 0', name='opening')
+    person = db.relationship('People')
 
     @classmethod
     def insert(cls, netid, title, opening):
