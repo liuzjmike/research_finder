@@ -100,7 +100,6 @@ def ProfileForm(person, faculty=None, student=None):
             'Last Name', [data_required], default=person.last_name)
         email = StringField(
             'Email', [data_required, Email()], default=person.email)
-        # interests = TextAreaField('Interests', default=', '.join(int_fields))
         interests = TextAreaField('Interests', default=', '.join(int_fields))
         department1 = StringField('Department 1', [data_required], default=person.departments[0].dept_id)
         department2 = StringField(
