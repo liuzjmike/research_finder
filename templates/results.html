@@ -1,27 +1,43 @@
 {% extends 'layout.html' %}
-{% block heading %}Search Results{% endblock %}
+{% block heading %}<div class="container">
+  <div class="page-hearder">Search Results</div>
+</div>{% endblock %}
 {% block content %}
-    {% for user in matches %}
-    <ul>
-        <h3><a href="{{url_for('profile', netid=user.netid)}}">{{user.first_name}} {{user.last_name}}</a></h3>
-        <ul>
-            <li> Departments:
+<div class="container">
+  <div class="row">
+    <div class="col-md-14">
+      <div class="panel panel-default">
+        <div class="panel-body">
+            <ul>
+            {% for user in matches %}
+            <li>
+                <h3><a href="{{url_for('profile', netid=user.netid)}}">{{user.first_name}} {{user.last_name}}</a></h3>
                 <ul>
-                    {% for dept in user.departments|sort(attribute='dept_id') %}
-                    <li>{{dept.dept_id}}</li>
-                    {% endfor %}
+                    <li> Departments:
+                        <ul>
+                            {% for dept in user.departments|sort(attribute='dept_id') %}
+                            <li>{{dept.dept_id}}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li>Email: {{user.email}}</li>
+                    <li>Website: {{user.website}}</li>
+                    <li> Interests:
+                        <ul>
+                            {% for interest in user.interests|sort(attribute='field') %}
+                            <li>{{interest.field}}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
                 </ul>
-            </li>
-            <li>Email: {{user.email}}</li>
-            <li>Website: {{user.website}}</li>
-            <li> Interests:
-                <ul>
-                    {% for interest in user.interests|sort(attribute='field') %}
-                    <li>{{interest.field}}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        </ul>
-      </ul>
-   {% endfor %}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <!--/panel-body-->
+        </div>
+        <!--/panel-->
+      </div>
+    </div>
+</div>
 {% endblock %}
