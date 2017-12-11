@@ -33,6 +33,29 @@
 
               <tr>
                 <td>
+                  {{form.password.label}}:
+                </td>
+                <td>
+                  {{form.password}}
+                  {% if form.password.errors %}
+                  <ul>{% for error in form.password.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{form.confirm.label}}:
+                </td>
+                <td>
+                  {{form.confirm}}
+                  {% if form.confirm.errors %}
+                  <ul>{% for error in form.confirm.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                  {% endif %}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
                   <strong>{{form.email.label}}</strong>: 
                 </td>
                 <td>
@@ -165,7 +188,6 @@
               </tr>
             </table>
             <hr/>
-            <input type="reset" value="Reset"/>
             <input type="submit" value="Submit"/>
             {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
           </form>
