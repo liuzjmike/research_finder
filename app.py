@@ -8,8 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 import forms
 import models
 
-import sys
-
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
@@ -207,7 +205,6 @@ def search():
                 matches=query.all())
         except BaseException as e:
             form.errors['database'] = str(e)
-            print(form.errors)
             return render_template('search.html', form=form)
     else:
         return render_template('search.html', form=form)
