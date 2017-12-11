@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from wtforms import IntegerField, PasswordField, RadioField, \
-    StringField, TextAreaField
+    SelectField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, \
     Optional, URL, ValidationError
 
@@ -28,7 +28,7 @@ def validate_status(form, field):
     if form.role.data == 'student' and field.data not in \
             ['Undergraduate', 'Master', 'PhD', 'Post-Doc']:
         raise ValidationError(
-            'Title must be in [Undergraduate, Master, PhD, Post-Doc]')
+            'Status must be in [Undergraduate, Master, PhD, Post-Doc]')
 
 
 def validate_start_year(form, field):
@@ -62,9 +62,19 @@ class SignupForm(FlaskForm):
     resume = FileField('Resume')
     role = RadioField(
         'Role', [data_required], choices=[('faculty', 'Faculty'), ('student', 'Student')])
-    title = StringField('Title', [validate_title])
+    title = SelectField('Title', [validate_title],
+                        choices=[('N/A', '--'),
+                                 ('Professor', 'Professor'),
+                                 ('Associate Professor', 'Associate Professor'),
+                                 ('Assistant Professor', 'Assistant Professor'),
+                                 ('Lecturer', 'Lecturer')])
     opening = IntegerField('Opening', [validate_opening])
-    status = StringField('Status', [validate_status])
+    status = SelectField("Academic Status", [validate_status],
+                         choices=[('N/A', '--'),
+                                  ('Undergraduate', 'Undergraduate'),
+                                  ('Master', 'Master'),
+                                  ('PhD', 'PhD'),
+                                  ('Post-Doc', 'Post-Doc')])
     start_year = IntegerField('Start Year', [validate_start_year])
 
 
